@@ -2,12 +2,12 @@
 
 Time Limit does what it says on the tin. Worlds can now be set with time limits to have configurable events take place. For example, to run a timer for 5 minutes that exits the game on completion, type this into the chat or server console:
 
-  `/timelimit begin 300 exit false`
+  `/timerbegin 300 exit false`
 
 List of commands:
 
-* `begin <seconds> <action> <repeat>` - Begins the timer with the given number of seconds before the given action is executed.
-* `end` - Aborts all currently running timers.
+* `timerbegin <seconds> <action> <repeat>` - Begins the timer with the given number of seconds before the given action is executed.
+* `timerend` - Aborts all currently running timers.
 
 List of actions:
 
