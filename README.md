@@ -15,7 +15,7 @@ List of actions:
 * `exit` - Exits the server/returns to menu.
 * `kill` - All players die.
 * `hardkill` - All players die as if in hardcore mode (i.e. permadeath).
-* `afflict` - All players receive a permanent affliction as specified in the config file's 'AfflictDebuffs' debuff list.
+* `afflict` - All players receive a permanent affliction as specified in the config file's 'Afflictions' (de)buff list.
 * (custom action name) - Same as `none`, unless another mod implements the named action via. API.
 
-See the [Hamstar Helpers](https://github.com/hamstar0/tml-hamstarhelpers-mod) Control Panel for configuration options.
+See the [Hamstar's Helpers](https://github.com/hamstar0/tml-hamstarhelpers-mod) Control Panel for configuration options.

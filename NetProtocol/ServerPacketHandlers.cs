@@ -13,6 +13,9 @@ namespace TimeLimit.NetProtocol {
 			case TimeLimitProtocolTypes.RequestModSettings:
 				ServerPacketHandlers.ReceiveModSettingsRequestOnServer( mymod, reader, player_who );
 				break;
+			case TimeLimitProtocolTypes.RequestTimers:
+				ServerPacketHandlers.ReceiveTimersRequestOnServer( mymod, reader, player_who );
+				break;
 			default:
 				DebugHelpers.Log( "Invalid packet protocol: " + protocol );
 				break;
@@ -34,7 +37,7 @@ namespace TimeLimit.NetProtocol {
 			packet.Send( (int)player.whoAmI );
 		}
 
-		public static void BroadcastTimerStartFromServer( TimeLimitMod mymod, int duration, string action, bool repeats ) {
+		public static void SendTimerStartFromServer( TimeLimitMod mymod, int to_who, int duration, string action, bool repeats ) {
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimerStart );
@@ -42,7 +45,7 @@ namespace TimeLimit.NetProtocol {
 			packet.Write( action );
 			packet.Write( repeats );
 
-			packet.Send();
+			packet.Send( to_who );
 		}
 
 
@@ -53,6 +56,21 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceiveModSettingsRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
 			ServerPacketHandlers.SendModSettingsFromServer( mymod, Main.player[player_who] );
+		}
+
+		private static void ReceiveTimersRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
+			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+
+			for( int i=0; i<myworld.Logic.TimerDurations.Count; i++ ) {
+				int duration = myworld.Logic.TimerDurations[i];
+				string action = myworld.Logic.TimerActions[i];
+				bool repeats = myworld.Logic.TimerRepeats[i];
+				if( duration == 0 && !repeats ) {
+					continue;
+				}
+
+				ServerPacketHandlers.SendTimerStartFromServer( mymod, player_who, duration, action, repeats );
+			}
 		}
 	}
 }

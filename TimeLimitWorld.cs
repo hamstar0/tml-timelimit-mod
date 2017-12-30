@@ -17,7 +17,6 @@ namespace TimeLimit {
 
 		public override void Initialize() {
 			this.Logic = new TimerLogic();
-
 			this.ID = Guid.NewGuid().ToString( "D" );
 			this.HasCorrectID = false;  // 'Load()' decides if no pre-existing one is found
 		}
@@ -59,21 +58,21 @@ namespace TimeLimit {
 
 				if( is_correct_id ) { this.ID = id; }
 				this.HasCorrectID = is_correct_id;
-			} catch( Exception _ ) { }
+			} catch( Exception e ) { ErrorLogger.Log( e.ToString() ); }
 		}
 
 		public override void NetSend( BinaryWriter writer ) {
 			try {
 				writer.Write( this.ID );
 				writer.Write( this.HasCorrectID );
-			} catch(Exception _ ) { }
+			} catch(Exception e ) { ErrorLogger.Log( e.ToString() ); }
 		}
 
 
 		////////////////
 
 		public override void PreUpdate() {
-			if( Main.netMode != 2 ) {
+			if( Main.netMode != 1 ) {
 				this.Logic.Update( (TimeLimitMod)this.mod );
 			}
 		}

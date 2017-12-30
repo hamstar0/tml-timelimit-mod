@@ -96,7 +96,6 @@ namespace TimeLimit {
 			if( idx != -1 ) {
 				GameInterfaceDrawMethod draw_method = delegate {
 					var myworld = this.GetModWorld<TimeLimitWorld>();
-					if( !myworld.Logic.IsInitialized ) { return true; }
 
 					myworld.Logic.DrawTimers( this, Main.spriteBatch );
 

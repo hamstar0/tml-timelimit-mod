@@ -2,6 +2,7 @@
 	public enum TimeLimitProtocolTypes : byte {
 		RequestModSettings,
 		ModSettings,
+		RequestTimers,
 		TimerStart
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using System;
+using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.NetProtocol;
 
@@ -32,6 +33,7 @@ namespace TimeLimit {
 
 				if( Main.netMode == 1 ) {   // Client
 					ClientPacketHandlers.SendModSettingsRequestFromClient( mymod );
+					ClientPacketHandlers.SendTimersRequestFromClient( mymod );
 				}
 			}
 

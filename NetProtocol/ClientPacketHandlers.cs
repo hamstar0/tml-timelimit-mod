@@ -1,5 +1,7 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using Microsoft.Xna.Framework;
 using System.IO;
+using Terraria;
 using Terraria.ModLoader;
 
 
@@ -34,7 +36,16 @@ namespace TimeLimit.NetProtocol {
 
 			packet.Send();
 		}
+
+		public static void SendTimersRequestFromClient( TimeLimitMod mymod ) {
+			ModPacket packet = mymod.GetPacket();
+
+			packet.Write( (byte)TimeLimitProtocolTypes.RequestTimers );
+
+			packet.Send();
+		}
 		
+
 
 
 		////////////////
@@ -52,6 +63,8 @@ namespace TimeLimit.NetProtocol {
 			bool repeats = reader.ReadBoolean();
 
 			myworld.Logic.Add( duration, action, repeats );
+
+			Main.NewText( "Timer to perform action '" + action + "' added.", Color.Yellow );
 		}
 	}
 }

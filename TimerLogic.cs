@@ -27,10 +27,7 @@ namespace TimeLimit {
 
 		public TimerLogic() {
 			this.IsInitialized = false;
-			this.TimerStartDurations = null;
-			this.TimerDurations = null;
-			this.TimerActions = null;
-			this.TimerRepeats = null;
+			this.ResetAll();
 		}
 
 		public void Initialize( IList<int> timer_start_durations, IList<int> timer_durations, IList<string> timer_actions, IList<bool> timer_repeats ) {
@@ -51,7 +48,7 @@ namespace TimeLimit {
 			this.TimerRepeats.Add( repeats );
 		}
 
-		public void AbortAll() {
+		public void ResetAll() {
 			this.TimerStartDurations = new List<int>();
 			this.TimerDurations = new List<int>();
 			this.TimerActions = new List<string>();
@@ -91,8 +88,32 @@ namespace TimeLimit {
 			for( int i=0; i<this.TimerDurations.Count; i++ ) {
 				if( this.TimerDurations[i] == 0 ) { continue; }
 
-				sb.DrawString( Main.fontDeathText, this.RenderTimer(i), new Vector2(x, y + (j*32)), Color.Gray );
+				string act = "Time until " + this.RenderAction( this.TimerActions[i] );
+				Vector2 act_pos = new Vector2( x, y + ( j * 32 ) );
+				Vector2 timer_pos = act_pos + new Vector2( 0, 6 );
+
+				sb.DrawString( Main.fontDeathText, act, act_pos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
+				sb.DrawString( Main.fontDeathText, this.RenderTimer(i), timer_pos, Color.Gray );
 				j++;
+			}
+		}
+
+		////////////////
+
+		public string RenderAction( string action ) {
+			switch( action ) {
+			case "none":
+				return "timer expiration";
+			case "exit":
+				return "forced exit to menu";
+			case "kill":
+				return "everyone dies";
+			case "hardkill":
+				return "game over";
+			case "afflict":
+				return "permanent status changes";
+			default:
+				return "custom action '" + action + "'";
 			}
 		}
 
@@ -118,7 +139,7 @@ namespace TimeLimit {
 				break;
 			case "exit":
 				Main.NewText( "Time's up. Bye!", Color.Red );
-				TmlHelpers.Exit();
+				TmlHelpers.ExitToMenu();
 				break;
 			case "kill":
 				Main.LocalPlayer.KillMe( PlayerDeathReason.ByCustomReason("Time's up."), 9999, 0 );

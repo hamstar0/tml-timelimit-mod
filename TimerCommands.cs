@@ -1,7 +1,7 @@
 ﻿using System;
 using Terraria;
 using Terraria.ModLoader;
-
+using TimeLimit.NetProtocol;
 
 namespace TimeLimit {
 	class TimerBeginCommand : ModCommand {
@@ -16,11 +16,11 @@ namespace TimeLimit {
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			if( Main.netMode == 1 ) { throw new Exception("Invalid command call from client."); }
 
-			int duration;
+			int seconds;
 			bool repeats;
 			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
 
-			if( !int.TryParse( args[0], out duration ) ) {
+			if( !int.TryParse( args[0], out seconds ) ) {
 				throw new UsageException( args[0] + " is not an integer" );
 			}
 
@@ -30,9 +30,13 @@ namespace TimeLimit {
 				throw new UsageException( args[0] + " is not boolean" );
 			}
 
-			myworld.Logic.Add( duration * 60, action, repeats );
-
-			caller.Reply( "Timer to perform action '"+action+"' added." );
+			if( Main.netMode == 0 ) {
+				myworld.Logic.Add( seconds * 60, action, repeats );
+				caller.Reply( "Timer to perform action '" + action + "' added." );
+			} else {
+				ServerPacketHandlers.SendTimerStartFromServer( (TimeLimitMod)this.mod, -1, seconds * 60, action, repeats );
+				caller.Reply( "Timer added." );
+			}
 		}
 	}
 
@@ -49,7 +53,7 @@ namespace TimeLimit {
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
-			myworld.Logic.AbortAll();
+			myworld.Logic.ResetAll();
 		}
 	}
 }
