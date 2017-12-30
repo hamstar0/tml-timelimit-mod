@@ -114,17 +114,22 @@ namespace TimeLimit {
 		private void RunAction( TimeLimitMod mymod, string action ) {
 			switch( action ) {
 			case "none":
+				Main.NewText( "Time's up.", Color.Red );
 				break;
 			case "exit":
+				Main.NewText( "Time's up. Bye!", Color.Red );
 				TmlHelpers.Exit();
 				break;
 			case "kill":
 				Main.LocalPlayer.KillMe( PlayerDeathReason.ByCustomReason("Time's up."), 9999, 0 );
 				break;
 			case "hardkill":
-				PlayerHelpers.KillWithPermadeath( Main.LocalPlayer, "Time's up." );
+				PlayerHelpers.KillWithPermadeath( Main.LocalPlayer, "Time's up. Game over." );
 				break;
 			case "afflict":
+				var afflictions = string.Join( ",", mymod.Config.Afflictions );
+
+				Main.NewText( "Time's up. You now have the following: "+afflictions, Color.Red );
 				this.ApplyAffliction( mymod );
 				break;
 			default:
