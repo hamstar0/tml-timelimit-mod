@@ -1,0 +1,6 @@
+author = hamstar
+version = 1.0.0
+displayName = Time Limit
+modReferences = HamstarHelpers
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
+homepage = http://forums.terraria.org/index.php?threads/lives-injury.52287/

@@ -1,0 +1,14 @@
+v1
+-	Implement API
+-	Implement actions
+	-	custom
+	-	afflict
+	-	hardkill
+	-	kill
+	-	exit
+-	@Test
+-	Display timers (inventory screen only)
+-	Implement timers
+-	Define commands 'timerbegin' and 'timerend'
+-	Implement config
+-	Define mod
