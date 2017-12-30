@@ -34,7 +34,7 @@ namespace TimeLimit {
 				myworld.Logic.Add( seconds * 60, action, repeats );
 				caller.Reply( "Timer to perform action '" + action + "' added." );
 			} else {
-				ServerPacketHandlers.SendTimerStartFromServer( (TimeLimitMod)this.mod, -1, seconds * 60, action, repeats );
+				ServerPacketHandlers.SendTimerStartFromServer( (TimeLimitMod)this.mod, -1, seconds * 60, seconds * 60, action, repeats );
 				caller.Reply( "Timer added." );
 			}
 		}

@@ -37,10 +37,11 @@ namespace TimeLimit.NetProtocol {
 			packet.Send( (int)player.whoAmI );
 		}
 
-		public static void SendTimerStartFromServer( TimeLimitMod mymod, int to_who, int duration, string action, bool repeats ) {
+		public static void SendTimerStartFromServer( TimeLimitMod mymod, int to_who, int start_duration, int duration, string action, bool repeats ) {
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimerStart );
+			packet.Write( start_duration );
 			packet.Write( duration );
 			packet.Write( action );
 			packet.Write( repeats );
@@ -62,6 +63,7 @@ namespace TimeLimit.NetProtocol {
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			for( int i=0; i<myworld.Logic.TimerDurations.Count; i++ ) {
+				int start_duration = myworld.Logic.TimerStartDurations[i];
 				int duration = myworld.Logic.TimerDurations[i];
 				string action = myworld.Logic.TimerActions[i];
 				bool repeats = myworld.Logic.TimerRepeats[i];
@@ -69,7 +71,7 @@ namespace TimeLimit.NetProtocol {
 					continue;
 				}
 
-				ServerPacketHandlers.SendTimerStartFromServer( mymod, player_who, duration, action, repeats );
+				ServerPacketHandlers.SendTimerStartFromServer( mymod, player_who, start_duration, duration, action, repeats );
 			}
 		}
 	}

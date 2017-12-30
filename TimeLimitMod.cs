@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using TimeLimit.NetProtocol;
 
+
 namespace TimeLimit {
 	class TimeLimitMod : Mod {
 		public static TimeLimitMod Instance { get; private set; }
@@ -54,7 +55,7 @@ namespace TimeLimit {
 			TimeLimitMod.Instance = this;
 
 			var hamhelpmod = ModLoader.GetMod( "HamstarHelpers" );
-			var min_vers = new Version( 1, 2, 4 );
+			var min_vers = new Version( 1, 2, 4, 1 );
 			if( hamhelpmod.Version < min_vers ) {
 				throw new Exception( "Hamstar Helpers must be version " + min_vers.ToString() + " or greater." );
 			}
