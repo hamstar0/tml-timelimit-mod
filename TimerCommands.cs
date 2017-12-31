@@ -30,11 +30,12 @@ namespace TimeLimit {
 				throw new UsageException( args[0] + " is not boolean" );
 			}
 
+			Timer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action, repeats );
+
 			if( Main.netMode == 0 ) {
-				myworld.Logic.Add( seconds * 60, action, repeats );
 				caller.Reply( "Timer to perform action '" + action + "' added." );
 			} else {
-				ServerPacketHandlers.SendTimerStartFromServer( (TimeLimitMod)this.mod, -1, seconds * 60, seconds * 60, action, repeats );
+				ServerPacketHandlers.SendTimerStartFromServer( (TimeLimitMod)this.mod, -1, timer );
 				caller.Reply( "Timer added." );
 			}
 		}
@@ -52,8 +53,13 @@ namespace TimeLimit {
 		////////////////
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
-			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
-			myworld.Logic.ResetAll();
+			if( Main.netMode == 0 ) {
+				var myworld = this.mod.GetModWorld<TimeLimitWorld>();
+				myworld.Logic.EndAllTimers();
+			} else {
+				ServerPacketHandlers.SendEndTimersCommandFromServer( (TimeLimitMod)this.mod, -1 );
+			}
+			caller.Reply( "Timers ended." );
 		}
 	}
 }

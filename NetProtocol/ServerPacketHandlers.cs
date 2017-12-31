@@ -28,23 +28,31 @@ namespace TimeLimit.NetProtocol {
 		// Server Senders
 		////////////////
 
-		public static void SendModSettingsFromServer( TimeLimitMod mymod, Player player ) {
+		public static void SendModSettingsFromServer( TimeLimitMod mymod, int to_who ) {
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.ModSettings );
 			packet.Write( (string)mymod.JsonConfig.SerializeMe() );
 
-			packet.Send( (int)player.whoAmI );
+			packet.Send( to_who );
 		}
 
-		public static void SendTimerStartFromServer( TimeLimitMod mymod, int to_who, int start_duration, int duration, string action, bool repeats ) {
+		public static void SendTimerStartFromServer( TimeLimitMod mymod, int to_who, Timer timer ) {
 			ModPacket packet = mymod.GetPacket();
 
-			packet.Write( (byte)TimeLimitProtocolTypes.TimerStart );
-			packet.Write( start_duration );
-			packet.Write( duration );
-			packet.Write( action );
-			packet.Write( repeats );
+			packet.Write( (byte)TimeLimitProtocolTypes.TimerSend );
+			packet.Write( (int)timer.StartDuration );
+			packet.Write( (int)timer.Duration );
+			packet.Write( (string)timer.Action );
+			packet.Write( (bool)timer.Repeats );
+
+			packet.Send( to_who );
+		}
+
+		public static void SendEndTimersCommandFromServer( TimeLimitMod mymod, int to_who ) {
+			ModPacket packet = mymod.GetPacket();
+
+			packet.Write( (byte)TimeLimitProtocolTypes.EndTimers );
 
 			packet.Send( to_who );
 		}
@@ -55,23 +63,19 @@ namespace TimeLimit.NetProtocol {
 		// Server Receivers
 		////////////////
 
-		private static void ReceiveModSettingsRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
-			ServerPacketHandlers.SendModSettingsFromServer( mymod, Main.player[player_who] );
+			private static void ReceiveModSettingsRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
+			ServerPacketHandlers.SendModSettingsFromServer( mymod, player_who );
 		}
 
 		private static void ReceiveTimersRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
-			for( int i=0; i<myworld.Logic.TimerDurations.Count; i++ ) {
-				int start_duration = myworld.Logic.TimerStartDurations[i];
-				int duration = myworld.Logic.TimerDurations[i];
-				string action = myworld.Logic.TimerActions[i];
-				bool repeats = myworld.Logic.TimerRepeats[i];
-				if( duration == 0 && !repeats ) {
+			foreach( var timer in myworld.Logic.Timers ) {
+				if( timer.Duration == 0 && !timer.Repeats ) {
 					continue;
 				}
 
-				ServerPacketHandlers.SendTimerStartFromServer( mymod, player_who, start_duration, duration, action, repeats );
+				ServerPacketHandlers.SendTimerStartFromServer( mymod, player_who, timer );
 			}
 		}
 	}

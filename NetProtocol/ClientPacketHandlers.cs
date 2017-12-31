@@ -14,8 +14,11 @@ namespace TimeLimit.NetProtocol {
 			case TimeLimitProtocolTypes.ModSettings:
 				ClientPacketHandlers.ReceiveModSettingsOnClient( mymod, reader );
 				break;
-			case TimeLimitProtocolTypes.TimerStart:
-				ClientPacketHandlers.ReceiveTimerStartOnClient( mymod, reader );
+			case TimeLimitProtocolTypes.TimerSend:
+				ClientPacketHandlers.ReceiveTimersOnClient( mymod, reader );
+				break;
+			case TimeLimitProtocolTypes.EndTimers:
+				ClientPacketHandlers.ReceiveEndTimersCommandOnClient( mymod, reader );
 				break;
 			default:
 				DebugHelpers.Log( "Invalid packet protocol: " + protocol );
@@ -56,15 +59,24 @@ namespace TimeLimit.NetProtocol {
 			mymod.JsonConfig.DeserializeMe( reader.ReadString() );
 		}
 
-		private static void ReceiveTimerStartOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveTimersOnClient( TimeLimitMod mymod, BinaryReader reader ) {
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			int start_duration = reader.ReadInt32();
 			int duration = reader.ReadInt32();
 			string action = reader.ReadString();
 			bool repeats = reader.ReadBoolean();
 
-			myworld.Logic.Add( duration, action, repeats );
+			myworld.Logic.StartTimer( start_duration, duration, action, repeats );
 
 			Main.NewText( "Timer to perform action '" + action + "' added.", Color.Yellow );
+		}
+
+		private static void ReceiveEndTimersCommandOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+
+			myworld.Logic.EndAllTimers();
+
+			Main.NewText( "Timers ended.", Color.Yellow );
 		}
 	}
 }

@@ -12,65 +12,107 @@ using Terraria.ModLoader;
 
 
 namespace TimeLimit {
+	struct Timer {
+		public static string RenderAction( string action ) {
+			switch( action ) {
+			case "none":
+				return "timer expiration";
+			case "exit":
+				return "forced to exit to menu";
+			case "kill":
+				return "everyone dies";
+			case "hardkill":
+				return "game over";
+			case "afflict":
+				return "permanent status changes";
+			default:
+				return "custom action '" + action + "'";
+			}
+		}
+
+		public static string RenderDuration( int duration ) {
+			int total_seconds = duration / 60;
+			int total_minutes = total_seconds / 60;
+			int total_hours = total_minutes / 60;
+			int minutes = total_minutes - ( total_hours * 60 );
+			int seconds = total_seconds - ( total_minutes * 60 );
+
+			return total_hours.ToString( "D2" ) + ":" + minutes.ToString( "D2" ) + ":" + seconds.ToString( "D2" );
+		}
+
+
+		////////////////
+
+		public int StartDuration;
+		public int Duration;
+		public string Action;
+		public bool Repeats;
+
+
+		////////////////
+
+		public Timer( int start_duration, int duration, string action, bool repeats ) {
+			this.StartDuration = start_duration;
+			this.Duration = duration;
+			this.Action = action;
+			this.Repeats = repeats;
+		}
+	}
+
+
+
 	class TimerLogic {
 		internal IDictionary<string, Action> TimesUpHooks = new Dictionary<string, Action>();
 
 		public bool IsInitialized { get; private set; }
 
-		public IList<int> TimerStartDurations { get; private set; }
-		public IList<int> TimerDurations { get; private set; }
-		public IList<string> TimerActions { get; private set; }
-		public IList<bool> TimerRepeats { get; private set; }
+		public IList<Timer> Timers { get; private set; }
 
 
 		////////////////
 
 		public TimerLogic() {
 			this.IsInitialized = false;
-			this.ResetAll();
+			this.EndAllTimers();
 		}
 
 		public void Initialize( IList<int> timer_start_durations, IList<int> timer_durations, IList<string> timer_actions, IList<bool> timer_repeats ) {
 			this.IsInitialized = true;
 
-			this.TimerStartDurations = timer_start_durations;
-			this.TimerDurations = timer_durations;
-			this.TimerActions = timer_actions;
-			this.TimerRepeats = timer_repeats;
+			for( int i=0; i<timer_start_durations.Count; i++ ) {
+				this.Timers.Add( new Timer( timer_start_durations[i], timer_durations[i], timer_actions[i], timer_repeats[i] ) );
+			}
 		}
 
 		////////////////
 
-		public void Add( int duration, string action, bool repeats ) {
-			this.TimerStartDurations.Add( duration );
-			this.TimerDurations.Add( duration );
-			this.TimerActions.Add( action );
-			this.TimerRepeats.Add( repeats );
+		public Timer StartTimer( int start_duration, int duration, string action, bool repeats ) {
+			var timer = new Timer( duration, duration, action, repeats );
+			this.Timers.Add( timer );
+
+			return timer;
 		}
 
-		public void ResetAll() {
-			this.TimerStartDurations = new List<int>();
-			this.TimerDurations = new List<int>();
-			this.TimerActions = new List<string>();
-			this.TimerRepeats = new List<bool>();
+		public void EndAllTimers() {
+			this.Timers = new List<Timer>();
 		}
 
 
 		////////////////
 
 		public void Update( TimeLimitMod mymod ) {
-			for( int i=0; i<this.TimerDurations.Count; i++ ) {
-				int duration = this.TimerDurations[i];
+			for( int i=0; i<this.Timers.Count; i++ ) {
+				Timer timer = this.Timers[i];
 
-				if( duration == 1 ) {
-					this.RunAction( mymod, this.TimerActions[i] );
+				if( timer.Duration == 1 ) {
+					this.RunAction( mymod, timer.Action );
 				}
 
-				if( duration > 0 ) {
-					this.TimerDurations[i]--;
+				if( timer.Duration > 0 ) {
+					timer.Duration--;
 				} else {
-					if( this.TimerRepeats[i] ) {
-						this.TimerDurations[i] = this.TimerStartDurations[i];
+					if( timer.Repeats ) {
+						timer.Duration = timer.StartDuration;
 					}
 				}
 			}
@@ -85,48 +127,19 @@ namespace TimeLimit {
 			int y = mymod.Config.TimerDisplayY >= 0 ? mymod.Config.TimerDisplayY : Main.screenHeight + mymod.Config.TimerDisplayY;
 
 			int j = 0;
-			for( int i=0; i<this.TimerDurations.Count; i++ ) {
-				if( this.TimerDurations[i] == 0 ) { continue; }
+			for( int i=0; i<this.Timers.Count; i++ ) {
+				Timer timer = this.Timers[i];
 
-				string act = "Time until " + this.RenderAction( this.TimerActions[i] );
+				if( timer.Duration == 0 ) { continue; }
+
+				string act = "Time until " + Timer.RenderAction( timer.Action );
 				Vector2 act_pos = new Vector2( x, y + ( j * 32 ) );
 				Vector2 timer_pos = act_pos + new Vector2( 0, 6 );
 
 				sb.DrawString( Main.fontDeathText, act, act_pos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
-				sb.DrawString( Main.fontDeathText, this.RenderTimer(i), timer_pos, Color.Gray );
+				sb.DrawString( Main.fontDeathText, Timer.RenderDuration(timer.Duration), timer_pos, Color.Gray );
 				j++;
 			}
-		}
-
-		////////////////
-
-		public string RenderAction( string action ) {
-			switch( action ) {
-			case "none":
-				return "timer expiration";
-			case "exit":
-				return "forced exit to menu";
-			case "kill":
-				return "everyone dies";
-			case "hardkill":
-				return "game over";
-			case "afflict":
-				return "permanent status changes";
-			default:
-				return "custom action '" + action + "'";
-			}
-		}
-
-
-		public string RenderTimer( int which ) {
-			int timer = this.TimerDurations[ which ];
-			int total_seconds = timer / 60;
-			int total_minutes = total_seconds / 60;
-			int total_hours = total_minutes / 60;
-			int minutes = total_minutes - (total_hours * 60);
-			int seconds = total_seconds - (total_minutes * 60);
-
-			return total_hours.ToString("D2")+":"+minutes.ToString("D2")+":"+seconds.ToString("D2");
 		}
 
 

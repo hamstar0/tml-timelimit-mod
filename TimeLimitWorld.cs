@@ -38,12 +38,24 @@ namespace TimeLimit {
 		}
 
 		public override TagCompound Save() {
+			IList<int> start_durations = new List<int>();
+			IList<int> durations = new List<int>();
+			IList<string> actions = new List<string>();
+			IList<bool> repeats = new List<bool>();
+
+			foreach( var timer in this.Logic.Timers ) {
+				start_durations.Add( timer.StartDuration );
+				durations.Add( timer.Duration );
+				actions.Add( timer.Action );
+				repeats.Add( timer.Repeats );
+			}
+
 			var tags = new TagCompound {
 				{ "world_id", this.ID },
-				{ "timer_start_durations", this.Logic.TimerStartDurations },
-				{ "timer_durations", this.Logic.TimerDurations },
-				{ "timer_actions", this.Logic.TimerActions },
-				{ "timer_repeats", this.Logic.TimerRepeats },
+				{ "timer_start_durations", start_durations },
+				{ "timer_durations", durations },
+				{ "timer_actions", actions },
+				{ "timer_repeats", repeats },
 			};
 
 			return tags;

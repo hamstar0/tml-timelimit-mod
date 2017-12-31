@@ -3,6 +3,7 @@
 		RequestModSettings,
 		ModSettings,
 		RequestTimers,
-		TimerStart
+		TimerSend,
+		EndTimers
 	}
 }
