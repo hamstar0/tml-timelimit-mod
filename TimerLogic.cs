@@ -18,7 +18,7 @@ namespace TimeLimit {
 			case "none":
 				return "timer expiration";
 			case "exit":
-				return "forced to exit to menu";
+				return "forced to exit (to main menu)";
 			case "kill":
 				return "everyone dies";
 			case "hardkill":
@@ -133,7 +133,7 @@ namespace TimeLimit {
 				if( timer.Duration == 0 ) { continue; }
 
 				string act = "Time until " + Timer.RenderAction( timer.Action );
-				Vector2 act_pos = new Vector2( x, y + ( j * 32 ) );
+				Vector2 act_pos = new Vector2( x, y + ( j * 46 ) );
 				Vector2 timer_pos = act_pos + new Vector2( 0, 6 );
 
 				sb.DrawString( Main.fontDeathText, act, act_pos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
