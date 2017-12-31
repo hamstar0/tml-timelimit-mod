@@ -1,5 +1,6 @@
 ﻿using HamstarHelpers.DebugHelpers;
 using Microsoft.Xna.Framework;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
@@ -14,11 +15,17 @@ namespace TimeLimit.NetProtocol {
 			case TimeLimitProtocolTypes.ModSettings:
 				ClientPacketHandlers.ReceiveModSettingsOnClient( mymod, reader );
 				break;
-			case TimeLimitProtocolTypes.TimerSend:
+			case TimeLimitProtocolTypes.TimerStart:
 				ClientPacketHandlers.ReceiveTimersOnClient( mymod, reader );
 				break;
-			case TimeLimitProtocolTypes.EndTimers:
-				ClientPacketHandlers.ReceiveEndTimersCommandOnClient( mymod, reader );
+			case TimeLimitProtocolTypes.TimersStop:
+				ClientPacketHandlers.ReceiveStopTimersCommandOnClient( mymod, reader );
+				break;
+			case TimeLimitProtocolTypes.TimersPause:
+				ClientPacketHandlers.ReceivePauseTimersCommandOnClient( mymod, reader );
+				break;
+			case TimeLimitProtocolTypes.TimersResume:
+				ClientPacketHandlers.ReceiveResumeTimersCommandOnClient( mymod, reader );
 				break;
 			default:
 				DebugHelpers.Log( "Invalid packet protocol: " + protocol );
@@ -33,6 +40,8 @@ namespace TimeLimit.NetProtocol {
 		////////////////
 
 		public static void SendModSettingsRequestFromClient( TimeLimitMod mymod ) {
+			if( Main.netMode != 1 ) { throw new Exception( "Not client" ); }
+
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.RequestModSettings );
@@ -41,13 +50,15 @@ namespace TimeLimit.NetProtocol {
 		}
 
 		public static void SendTimersRequestFromClient( TimeLimitMod mymod ) {
+			if( Main.netMode != 1 ) { throw new Exception( "Not client" ); }
+
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.RequestTimers );
 
 			packet.Send();
 		}
-		
+
 
 
 
@@ -56,27 +67,54 @@ namespace TimeLimit.NetProtocol {
 		////////////////
 
 		private static void ReceiveModSettingsOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+			if( Main.netMode != 1 ) { throw new Exception( "Not client" ); }
+
 			mymod.JsonConfig.DeserializeMe( reader.ReadString() );
 		}
 
 		private static void ReceiveTimersOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+			if( Main.netMode != 1 ) { throw new Exception( "Not client" ); }
+
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 			int start_duration = reader.ReadInt32();
 			int duration = reader.ReadInt32();
 			string action = reader.ReadString();
 			bool repeats = reader.ReadBoolean();
+			bool running = reader.ReadBoolean();
 
-			myworld.Logic.StartTimer( start_duration, duration, action, repeats );
+			myworld.Logic.StartTimer( start_duration, duration, action, repeats, running );
 
-			Main.NewText( "Timer to perform action '" + action + "' added.", Color.Yellow );
+			Main.NewText( "Timer started to perform action '" + action + "'.", Color.Yellow );
 		}
 
-		private static void ReceiveEndTimersCommandOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveStopTimersCommandOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+			if( Main.netMode != 1 ) { throw new Exception( "Not client" ); }
+
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
-			myworld.Logic.EndAllTimers();
+			myworld.Logic.StopAllTimers();
 
-			Main.NewText( "Timers ended.", Color.Yellow );
+			Main.NewText( "Timers stopped.", Color.Yellow );
+		}
+		
+		private static void ReceivePauseTimersCommandOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+			if( Main.netMode != 1 ) { throw new Exception( "Not client" ); }
+
+			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+
+			myworld.Logic.PauseAllTimers();
+
+			Main.NewText( "Timers paused.", Color.Yellow );
+		}
+		
+		private static void ReceiveResumeTimersCommandOnClient( TimeLimitMod mymod, BinaryReader reader ) {
+			if( Main.netMode != 1 ) { throw new Exception( "Not client" ); }
+
+			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+
+			myworld.Logic.ResumeAllTimers();
+
+			Main.NewText( "Timers resumed.", Color.Yellow );
 		}
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using HamstarHelpers.DebugHelpers;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
+using TimeLimit.Logic;
 
 
 namespace TimeLimit.NetProtocol {
@@ -29,6 +31,8 @@ namespace TimeLimit.NetProtocol {
 		////////////////
 
 		public static void SendModSettingsFromServer( TimeLimitMod mymod, int to_who ) {
+			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.ModSettings );
@@ -37,22 +41,47 @@ namespace TimeLimit.NetProtocol {
 			packet.Send( to_who );
 		}
 
-		public static void SendTimerStartFromServer( TimeLimitMod mymod, int to_who, Timer timer ) {
+		public static void SendStartTimerCommandFromServer( TimeLimitMod mymod, int to_who, ActionTimer timer ) {
+			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+
 			ModPacket packet = mymod.GetPacket();
 
-			packet.Write( (byte)TimeLimitProtocolTypes.TimerSend );
+			packet.Write( (byte)TimeLimitProtocolTypes.TimerStart );
 			packet.Write( (int)timer.StartDuration );
 			packet.Write( (int)timer.Duration );
 			packet.Write( (string)timer.Action );
 			packet.Write( (bool)timer.Repeats );
+			packet.Write( (bool)timer.IsRunning );
 
 			packet.Send( to_who );
 		}
 
-		public static void SendEndTimersCommandFromServer( TimeLimitMod mymod, int to_who ) {
+		public static void SendStopTimersCommandFromServer( TimeLimitMod mymod, int to_who ) {
+			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+
 			ModPacket packet = mymod.GetPacket();
 
-			packet.Write( (byte)TimeLimitProtocolTypes.EndTimers );
+			packet.Write( (byte)TimeLimitProtocolTypes.TimersStop );
+
+			packet.Send( to_who );
+		}
+
+		public static void SendPauseTimersCommandFromServer( TimeLimitMod mymod, int to_who ) {
+			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+
+			ModPacket packet = mymod.GetPacket();
+
+			packet.Write( (byte)TimeLimitProtocolTypes.TimersPause );
+
+			packet.Send( to_who );
+		}
+
+		public static void SendResumeTimersCommandFromServer( TimeLimitMod mymod, int to_who ) {
+			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+
+			ModPacket packet = mymod.GetPacket();
+
+			packet.Write( (byte)TimeLimitProtocolTypes.TimersResume );
 
 			packet.Send( to_who );
 		}
@@ -63,11 +92,15 @@ namespace TimeLimit.NetProtocol {
 		// Server Receivers
 		////////////////
 
-			private static void ReceiveModSettingsRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
+		private static void ReceiveModSettingsRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
+			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+
 			ServerPacketHandlers.SendModSettingsFromServer( mymod, player_who );
 		}
 
 		private static void ReceiveTimersRequestOnServer( TimeLimitMod mymod, BinaryReader reader, int player_who ) {
+			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
+
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			foreach( var timer in myworld.Logic.Timers ) {
@@ -75,7 +108,7 @@ namespace TimeLimit.NetProtocol {
 					continue;
 				}
 
-				ServerPacketHandlers.SendTimerStartFromServer( mymod, player_who, timer );
+				ServerPacketHandlers.SendStartTimerCommandFromServer( mymod, player_who, timer );
 			}
 		}
 	}

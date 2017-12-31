@@ -55,7 +55,7 @@ namespace TimeLimit {
 			TimeLimitMod.Instance = this;
 
 			var hamhelpmod = ModLoader.GetMod( "HamstarHelpers" );
-			var min_vers = new Version( 1, 2, 4, 1 );
+			var min_vers = new Version( 1, 2, 4, 2 );
 			if( hamhelpmod.Version < min_vers ) {
 				throw new Exception( "Hamstar Helpers must be version " + min_vers.ToString() + " or greater." );
 			}

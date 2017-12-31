@@ -4,6 +4,7 @@ using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using TimeLimit.Logic;
 
 
 namespace TimeLimit {
@@ -25,13 +26,24 @@ namespace TimeLimit {
 
 		public override void Load( TagCompound tags ) {
 			if( tags.ContainsKey( "world_id" ) ) {
-				this.ID = tags.GetString( "world_id" );
-				IList<int> timer_start_durations = tags.GetList<int>( "timer_start_durations" );
-				IList<int> timer_durations = tags.GetList<int>( "timer_durations" );
-				IList<string> timer_actions = tags.GetList<string>( "timer_actions" );
-				IList<bool> timer_repeats = tags.GetList<bool>( "timer_repeats" );
+				IList<int> timer_start_durations;
+				IList<int> timer_durations;
+				IList<string> timer_actions;
+				IList<bool> timer_repeats;
+				IList<bool> timer_runs;
 
-				this.Logic.Initialize( timer_start_durations, timer_durations, timer_actions, timer_repeats );
+				this.ID = tags.GetString( "world_id" );
+				timer_start_durations = tags.GetList<int>( "timer_start_durations" );
+				timer_durations = tags.GetList<int>( "timer_durations" );
+				timer_actions = tags.GetList<string>( "timer_actions" );
+				timer_repeats = tags.GetList<bool>( "timer_repeats" );
+				if( tags.ContainsKey( "timer_runs" ) ) {
+					timer_runs = tags.GetList<bool>( "timer_runs" );
+				} else {
+					timer_runs = new List<bool>( timer_durations.Count );
+				}
+
+				this.Logic.Load( timer_start_durations, timer_durations, timer_actions, timer_repeats, timer_runs );
 			}
 
 			this.HasCorrectID = true;
@@ -42,12 +54,14 @@ namespace TimeLimit {
 			IList<int> durations = new List<int>();
 			IList<string> actions = new List<string>();
 			IList<bool> repeats = new List<bool>();
+			IList<bool> runs = new List<bool>();
 
 			foreach( var timer in this.Logic.Timers ) {
 				start_durations.Add( timer.StartDuration );
 				durations.Add( timer.Duration );
 				actions.Add( timer.Action );
 				repeats.Add( timer.Repeats );
+				runs.Add( timer.IsRunning );
 			}
 
 			var tags = new TagCompound {
@@ -56,6 +70,7 @@ namespace TimeLimit {
 				{ "timer_durations", durations },
 				{ "timer_actions", actions },
 				{ "timer_repeats", repeats },
+				{ "timer_runs", runs },
 			};
 
 			return tags;
@@ -84,7 +99,7 @@ namespace TimeLimit {
 		////////////////
 
 		public override void PreUpdate() {
-			if( Main.netMode != 1 ) {
+			if( Main.netMode != 1 ) {	// Not client
 				this.Logic.Update( (TimeLimitMod)this.mod );
 			}
 		}

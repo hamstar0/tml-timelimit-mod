@@ -45,7 +45,7 @@ namespace TimeLimit {
 
 		public override void PreUpdate() {
 			if( this.player.whoAmI == Main.myPlayer ) {
-				if( Main.netMode == 1 ) {
+				if( Main.netMode == 1 ) {	// Client
 					var myworld = this.mod.GetModWorld<TimeLimitWorld>();
 					myworld.Logic.Update( (TimeLimitMod)this.mod );
 				}
