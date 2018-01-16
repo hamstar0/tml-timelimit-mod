@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -9,7 +8,7 @@ using Terraria;
 
 namespace TimeLimit.Logic {
 	partial class TimerLogic {
-		internal IDictionary<string, Action> TimesUpHooks = new Dictionary<string, Action>();
+		internal IDictionary<string, CustomTimerAction> CustomActions = new Dictionary<string, CustomTimerAction>();
 
 		public bool IsLoaded { get; private set; }
 

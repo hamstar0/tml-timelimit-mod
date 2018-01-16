@@ -1,3 +1,8 @@
+v1.2
+-	Restrict timers to be server-only (require configuring an admin user)
+-	Add loudspeaker action
+-	Add command action
+
 v1
 -	Implement API
 -	Implement actions

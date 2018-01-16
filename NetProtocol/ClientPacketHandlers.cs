@@ -28,7 +28,7 @@ namespace TimeLimit.NetProtocol {
 				ClientPacketHandlers.ReceiveResumeTimersCommandOnClient( mymod, reader );
 				break;
 			default:
-				DebugHelpers.Log( "Invalid packet protocol: " + protocol );
+				LogHelpers.Log( "Invalid packet protocol: " + protocol );
 				break;
 			}
 		}

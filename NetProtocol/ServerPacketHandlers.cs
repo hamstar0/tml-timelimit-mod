@@ -19,7 +19,7 @@ namespace TimeLimit.NetProtocol {
 				ServerPacketHandlers.ReceiveTimersRequestOnServer( mymod, reader, player_who );
 				break;
 			default:
-				DebugHelpers.Log( "Invalid packet protocol: " + protocol );
+				LogHelpers.Log( "Invalid packet protocol: " + protocol );
 				break;
 			}
 		}

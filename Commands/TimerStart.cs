@@ -6,10 +6,19 @@ using TimeLimit.NetProtocol;
 
 namespace TimeLimit.Commands {
 	class TimerStartCommand : ModCommand {
-		public override CommandType Type { get { return CommandType.World; } }
+		public override CommandType Type {
+			get {
+				if( Main.netMode == 0 ) {
+					return CommandType.World;
+				}
+				return CommandType.Console;
+			}
+		}
 		public override string Command { get { return "timerstart"; } }
 		public override string Usage { get { return "/timerstart 300 exit false"; } }
-		public override string Description { get { return "Starts a new timer. Parameters are: <seconds> for duration, <action>, <loops>. Actions: 'none', 'kill', 'hardkill', 'afflict', '<custom>'"; } }
+		public override string Description { get { return "Starts a new timer."+
+			"\n   Parameters: <seconds> <action> <loops>"+
+			"\n   Actions types: 'none', 'kill', 'hardkill', 'afflict', '<custom>'"; } }
 
 
 		////////////////
@@ -25,7 +34,7 @@ namespace TimeLimit.Commands {
 			}
 
 			if( !bool.TryParse( args[2], out repeats ) ) {
-				throw new UsageException( args[0] + " is not boolean" );
+				throw new UsageException( args[2] + " is not boolean" );
 			}
 
 			ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action, repeats, true );
