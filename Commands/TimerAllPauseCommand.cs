@@ -4,7 +4,7 @@ using TimeLimit.NetProtocol;
 
 
 namespace TimeLimit.Commands {
-	class TimerAllResumeCommand : ModCommand {
+	class TimerAllPauseCommand : ModCommand {
 		public override CommandType Type {
 			get {
 				if( Main.netMode == 0 ) {
@@ -13,21 +13,21 @@ namespace TimeLimit.Commands {
 				return CommandType.Console;
 			}
 		}
-		public override string Command { get { return "timerallresume"; } }
-		public override string Usage { get { return "/timerallresume"; } }
-		public override string Description { get { return "Resumes all running timers."; } }
+		public override string Command { get { return "timerallpause"; } }
+		public override string Usage { get { return "/timerallpause"; } }
+		public override string Description { get { return "Pauses all running timers."; } }
 
 
 		////////////////
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
-			myworld.Logic.ResumeAllTimers();
+			myworld.Logic.PauseAllTimers();
 
 			if( Main.netMode == 2 ) {
-				ServerPacketHandlers.SendResumeTimersCommandFromServer( (TimeLimitMod)this.mod, -1 );
+				SendPackets.SendPauseTimersCommand( (TimeLimitMod)this.mod, -1 );
 			}
-			caller.Reply( "Timers resumed." );
+			caller.Reply( "Timers paused." );
 		}
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Terraria;
 using TimeLimit.Logic;
 using TimeLimit.NetProtocol;
+
 
 namespace TimeLimit {
 	public delegate void CustomTimerAction();
@@ -10,6 +12,13 @@ namespace TimeLimit {
 	
 	public static class TimeLimitAPI {
 		internal static object Call( string call_type, params object[] args ) {
+			string seconds_str;
+			string repeats_str;
+			int seconds;
+			bool repeats;
+			string action_name;
+
+
 			switch( call_type ) {
 			case "GetModSettings":
 				return TimeLimitAPI.GetModSettings();
@@ -21,33 +30,31 @@ namespace TimeLimit {
 			case "RunTimesUpAction":
 				if( args.Length < 1 ) { throw new Exception( "Insufficient parameters for API call " + call_type ); }
 
-				var action_name1 = args[0] as string;
-				if( string.IsNullOrEmpty( action_name1 ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				action_name = args[0] as string;
+				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
 
-				TimeLimitAPI.RunTimesUpAction( action_name1 );
+				TimeLimitAPI.RunTimesUpAction( action_name );
 				return null;
 
 			case "TimerStart":
 				if( args.Length < 3 ) { throw new Exception( "Insufficient parameters for API call " + call_type ); }
 
-				var action_name2 = args[0] as string;
-				if( string.IsNullOrEmpty( action_name2 ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
-				var seconds_str = args[0] as string;
-				if( string.IsNullOrEmpty( action_name2 ) ) { throw new Exception( "Invalid parameter seconds for API call " + call_type ); }
-				var repeats_str = args[0] as string;
-				if( string.IsNullOrEmpty( action_name2 ) ) { throw new Exception( "Invalid parameter repeats for API call " + call_type ); }
+				action_name = args[0] as string;
+				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				seconds_str = args[0] as string;
+				if( string.IsNullOrEmpty( seconds_str ) ) { throw new Exception( "Invalid parameter seconds for API call " + call_type ); }
+				repeats_str = args[0] as string;
+				if( string.IsNullOrEmpty( repeats_str ) ) { throw new Exception( "Invalid parameter repeats for API call " + call_type ); }
 
-				int seconds;
 				if( !int.TryParse( seconds_str, out seconds ) ) {
 					throw new Exception( args[0] + " is not an integer" );
 				}
 
-				bool repeats;
 				if( !bool.TryParse( repeats_str, out repeats ) ) {
 					throw new Exception( args[2] + " is not boolean" );
 				}
 
-				TimeLimitAPI.TimerStart( action_name2, seconds, repeats );
+				TimeLimitAPI.TimerStart( action_name, seconds, repeats );
 				return null;
 
 			case "TimerAllStop":
@@ -62,10 +69,16 @@ namespace TimeLimit {
 				TimeLimitAPI.TimerAllResume();
 				return null;
 
+			case "GetTimersOf":
+				action_name = args[0] as string;
+				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+
+				return TimeLimitAPI.GetTimersOf( action_name );
+
 			case "AddCustomAction":
 				if( args.Length < 3 ) { throw new Exception("Insufficient parameters for API call "+call_type);  }
 				
-				var action_name = args[0] as string;
+				action_name = args[0] as string;
 				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
 
 				var hook = args[1] as CustomTimerAction;
@@ -102,10 +115,11 @@ namespace TimeLimit {
 
 		public static void TimerStart( string action_name, int seconds, bool repeats ) {
 			var myworld = TimeLimitMod.Instance.GetModWorld<TimeLimitWorld>();
+
 			ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action_name, repeats, true );
 
 			if( Main.netMode == 2 ) {
-				ServerPacketHandlers.SendStartTimerCommandFromServer( TimeLimitMod.Instance, -1, timer );
+				SendPackets.SendStartTimerCommand( TimeLimitMod.Instance, timer, myworld.Logic.Timers.Count, -1 );
 			}
 		}
 
@@ -114,7 +128,7 @@ namespace TimeLimit {
 
 			myworld.Logic.StopAllTimers();
 			if( Main.netMode == 2 ) {
-				ServerPacketHandlers.SendStopTimersCommandFromServer( TimeLimitMod.Instance, -1 );
+				SendPackets.SendStopTimersCommand( TimeLimitMod.Instance, -1 );
 			}
 		}
 
@@ -123,7 +137,7 @@ namespace TimeLimit {
 
 			myworld.Logic.PauseAllTimers();
 			if( Main.netMode == 2 ) {
-				ServerPacketHandlers.SendPauseTimersCommandFromServer( TimeLimitMod.Instance, -1 );
+				SendPackets.SendPauseTimersCommand( TimeLimitMod.Instance, -1 );
 			}
 		}
 
@@ -132,8 +146,23 @@ namespace TimeLimit {
 
 			myworld.Logic.ResumeAllTimers();
 			if( Main.netMode == 2 ) {
-				ServerPacketHandlers.SendResumeTimersCommandFromServer( TimeLimitMod.Instance, -1 );
+				SendPackets.SendResumeTimersCommand( TimeLimitMod.Instance, -1 );
 			}
+		}
+
+
+		////////////////
+
+		public static IList<ActionTimer> GetTimersOf( string action ) {
+			var myworld = TimeLimitMod.Instance.GetModWorld<TimeLimitWorld>();
+			IList<ActionTimer> timers = new List<ActionTimer>();
+
+			foreach( var timer in myworld.Logic.Timers ) {
+				if( timer.Action.Equals(timer) ) {
+					timers.Add( timer );
+				}
+			}
+			return timers;
 		}
 
 

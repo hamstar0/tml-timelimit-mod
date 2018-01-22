@@ -7,7 +7,6 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using TimeLimit.NetProtocol;
 
-
 namespace TimeLimit {
 	class TimeLimitMod : Mod {
 		public static TimeLimitMod Instance { get; private set; }
@@ -55,7 +54,7 @@ namespace TimeLimit {
 			TimeLimitMod.Instance = this;
 
 			var hamhelpmod = ModLoader.GetMod( "HamstarHelpers" );
-			var min_vers = new Version( 1, 2, 4, 2 );
+			var min_vers = new Version( 1, 3, 1 );
 			if( hamhelpmod.Version < min_vers ) {
 				throw new Exception( "Hamstar Helpers must be version " + min_vers.ToString() + " or greater." );
 			}
@@ -97,11 +96,13 @@ namespace TimeLimit {
 		////////////////
 
 		public override void HandlePacket( BinaryReader reader, int player_who ) {
-			if( Main.netMode == 1 ) {   // Client
-				ClientPacketHandlers.HandlePacket( this, reader );
-			} else if( Main.netMode == 2 ) {    // Server
-				ServerPacketHandlers.HandlePacket( this, reader, player_who );
+			if( RequestPackets.HandlePacket( this, reader, player_who ) ) {
+				return;
 			}
+			if( SendPackets.HandlePacket( this, reader ) ) {
+				return;
+			}
+			throw new Exception( "Unrecognized packet" );
 		}
 
 

@@ -34,19 +34,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="API.cs" />
-    <Compile Include="Commands\TimerAllResume.cs" />
-    <Compile Include="Commands\TimerAllPause.cs" />
-    <Compile Include="Commands\TimerAllStop.cs" />
+    <Compile Include="Commands\TimerAllResumeCommand.cs" />
+    <Compile Include="Commands\TimerAllPauseCommand.cs" />
+    <Compile Include="Commands\TimerAllStopCommand.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Logic\ActionTimer.cs" />
     <Compile Include="Logic\TimerLogic_Actions.cs" />
-    <Compile Include="NetProtocol\ClientPacketHandlers.cs" />
+    <Compile Include="Logic\TimerLogic_Network.cs" />
     <Compile Include="NetProtocol\NetProtocolTypes.cs" />
-    <Compile Include="NetProtocol\ServerPacketHandlers.cs" />
+    <Compile Include="NetProtocol\SendPackets.cs" />
+    <Compile Include="NetProtocol\RequestPackets.cs" />
     <Compile Include="TimeLimitMod.cs" />
     <Compile Include="TimeLimitPlayer.cs" />
     <Compile Include="TimeLimitWorld.cs" />
-    <Compile Include="Commands\TimerStart.cs" />
+    <Compile Include="Commands\TimerStartCommand.cs" />
     <Compile Include="Logic\TimerLogic.cs" />
   </ItemGroup>
   <ItemGroup>

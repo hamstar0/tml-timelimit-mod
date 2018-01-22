@@ -27,23 +27,27 @@ namespace TimeLimit.Commands {
 			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
 			int seconds;
 			bool repeats;
-			string action = args[1];
+			string action;
 
 			if( !int.TryParse( args[0], out seconds ) ) {
 				throw new UsageException( args[0] + " is not an integer" );
 			}
 
+			action = args[1];
+			if( !myworld.Logic.IsValidAction(action) ) {
+				throw new UsageException( args[1] + " is not a valid action" );
+			}
+
 			if( !bool.TryParse( args[2], out repeats ) ) {
 				throw new UsageException( args[2] + " is not boolean" );
 			}
-
+			
 			ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action, repeats, true );
 
-			if( Main.netMode == 0 ) {
-				caller.Reply( "Timer started to perform action '" + action + "'." );
+			if( Main.netMode != 0 ) {
+				SendPackets.SendStartTimerCommand( (TimeLimitMod)this.mod, timer, myworld.Logic.Timers.Count, -1 );
 			} else {
-				ServerPacketHandlers.SendStartTimerCommandFromServer( (TimeLimitMod)this.mod, -1, timer );
-				caller.Reply( "Timer started." );
+				caller.Reply( "Timer started to perform action '" + action + "'" + ( repeats ? " repeatedly." : "." ) );
 			}
 		}
 	}

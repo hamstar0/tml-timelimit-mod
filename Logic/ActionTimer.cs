@@ -2,7 +2,7 @@
 
 
 namespace TimeLimit.Logic {
-	partial class ActionTimer {
+	public class ActionTimer {
 		public static string RenderAction( string action ) {
 			switch( action ) {
 			case "none":
@@ -59,7 +59,7 @@ namespace TimeLimit.Logic {
 
 		////
 
-		public void Update() {
+		internal void Update() {
 			if( this.Duration > 0 && this.IsRunning ) {
 				this.Duration--;
 			} else {

@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.WorldHelpers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -26,13 +28,33 @@ namespace TimeLimit.Logic {
 			this.IsLoaded = true;
 
 			for( int i=0; i<start_durations.Count; i++ ) {
-				this.Timers.Add( new ActionTimer( start_durations[i], durations[i], actions[i], repeats[i], running[i] ) );
+				var timer = new ActionTimer( start_durations[i], durations[i], actions[i], repeats[i], running[i] );
+				this.Timers.Add( timer );
 			}
 		}
 
 		////////////////
 
+		public bool IsValidAction( string action ) {
+			switch( action ) {
+			case "none":
+			case "exit":
+			case "kill":
+			case "hardkill":
+			case "afflict":
+				return true;
+			default:
+				return this.CustomActions.ContainsKey( action );
+			}
+		}
+
+
+		////////////////
+
+
 		public ActionTimer StartTimer( int start_duration, int duration, string action, bool repeats, bool is_running ) {
+			if( this.IsValidAction(action) ) { throw new Exception("Invalid action "+action); }
+
 			var timer = new ActionTimer( duration, duration, action, repeats, is_running );
 			this.Timers.Add( timer );
 
@@ -83,16 +105,17 @@ namespace TimeLimit.Logic {
 			
 			int x = mymod.Config.TimerDisplayX >= 0 ? mymod.Config.TimerDisplayX : Main.screenWidth + mymod.Config.TimerDisplayX;
 			int y = mymod.Config.TimerDisplayY >= 0 ? mymod.Config.TimerDisplayY : Main.screenHeight + mymod.Config.TimerDisplayY;
-			
-			for( int i=0; i<this.Timers.Count; i++ ) {
-				ActionTimer timer = this.Timers[i];
 
+			int i = 0;
+			foreach( var timer in this.Timers ) {
 				string act = "Time until " + ActionTimer.RenderAction( timer.Action );
 				Vector2 act_pos = new Vector2( x, y + ( i * 48 ) );
 				Vector2 timer_pos = act_pos + new Vector2( 0, 6 );
 
 				sb.DrawString( Main.fontDeathText, act, act_pos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
 				sb.DrawString( Main.fontDeathText, ActionTimer.RenderDuration(timer.Duration), timer_pos, Color.Gray );
+
+				i++;
 			}
 		}
 	}

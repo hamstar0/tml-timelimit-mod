@@ -1,6 +1,6 @@
 ﻿using HamstarHelpers.Utilities.Config;
 using System;
-
+using Terraria;
 
 namespace TimeLimit {
 	public class TimeLimitConfigData : ConfigurationDataBase {
@@ -34,6 +34,15 @@ namespace TimeLimit {
 			this.VersionSinceUpdate = TimeLimitConfigData.ConfigVersion.ToString();
 
 			return true;
+		}
+
+
+		internal void LoadFromNetwork( TimeLimitMod mymod, string json ) {
+			var myplayer = Main.LocalPlayer.GetModPlayer<TimeLimitPlayer>();
+
+			mymod.JsonConfig.DeserializeMe( json );
+
+			myplayer.FinishModSettingsSync();
 		}
 	}
 }
