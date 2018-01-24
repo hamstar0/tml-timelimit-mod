@@ -1,4 +1,7 @@
-﻿using Terraria;
+﻿using HamstarHelpers.DebugHelpers;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
 using TimeLimit.NetProtocol;
@@ -18,7 +21,7 @@ namespace TimeLimit.Commands {
 		public override string Usage { get { return "/timerstart 300 exit false"; } }
 		public override string Description { get { return "Starts a new timer."+
 			"\n   Parameters: <seconds> <action> <loops>"+
-			"\n   Actions types: 'none', 'kill', 'hardkill', 'afflict', '<custom>'"; } }
+			"\n   Actions types: 'none', 'exit', 'kill', 'hardkill', 'afflict', '<custom>'"; } }
 
 
 		////////////////
@@ -29,25 +32,37 @@ namespace TimeLimit.Commands {
 			bool repeats;
 			string action;
 
+			if( args.Length < 2 ) {
+				throw new UsageException("Insufficient arguments.");
+			}
+
 			if( !int.TryParse( args[0], out seconds ) ) {
-				throw new UsageException( args[0] + " is not an integer" );
+				caller.Reply( args[0] + " is not an integer", Color.Red );
+				return;
 			}
 
 			action = args[1];
 			if( !myworld.Logic.IsValidAction(action) ) {
-				throw new UsageException( args[1] + " is not a valid action" );
+				caller.Reply( args[1] + " is not a valid action", Color.Red );
+				return;
 			}
 
 			if( !bool.TryParse( args[2], out repeats ) ) {
-				throw new UsageException( args[2] + " is not boolean" );
+				caller.Reply( args[2] + " is not boolean", Color.Red );
+				return;
 			}
-			
-			ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action, repeats, true );
 
-			if( Main.netMode != 0 ) {
-				SendPackets.SendStartTimerCommand( (TimeLimitMod)this.mod, timer, myworld.Logic.Timers.Count, -1 );
-			} else {
-				caller.Reply( "Timer started to perform action '" + action + "'" + ( repeats ? " repeatedly." : "." ) );
+			try {
+				ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action, repeats, true );
+
+				if( Main.netMode != 0 ) {
+					caller.Reply( "Timer started." );
+					SendPackets.SendStartTimerCommand( (TimeLimitMod)this.mod, timer, myworld.Logic.Timers.Count, -1, -1 );
+				} else {
+					caller.Reply( "Timer started to perform action '" + action + "'" + ( repeats ? " repeatedly." : "." ) );
+				}
+			} catch( Exception e ) {
+				LogHelpers.Log( e.ToString() );
 			}
 		}
 	}

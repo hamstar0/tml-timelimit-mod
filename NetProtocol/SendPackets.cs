@@ -1,15 +1,11 @@
-﻿using System;
-using System.IO;
-using Terraria;
+﻿using System.IO;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
 
 
 namespace TimeLimit.NetProtocol {
 	static class SendPackets {
-		public static bool HandlePacket( TimeLimitMod mymod, BinaryReader reader ) {
-			TimeLimitProtocolTypes protocol = (TimeLimitProtocolTypes)reader.ReadByte();
-
+		public static bool HandlePacket( TimeLimitMod mymod, TimeLimitProtocolTypes protocol, BinaryReader reader ) {
 			switch( protocol ) {
 			case TimeLimitProtocolTypes.ModSettings:
 				SendPackets.ReceiveModSettings( mymod, reader );
@@ -34,8 +30,6 @@ namespace TimeLimit.NetProtocol {
 		////////////////
 
 		public static void SendModSettings( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
-			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
-
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.ModSettings );
@@ -45,8 +39,6 @@ namespace TimeLimit.NetProtocol {
 		}
 
 		public static void SendStartTimerCommand( TimeLimitMod mymod, ActionTimer timer, int total_timers, int to_who = -1, int ignore_who = -1 ) {
-			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
-
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimerStart );
@@ -61,8 +53,6 @@ namespace TimeLimit.NetProtocol {
 		}
 
 		public static void SendStopTimersCommand( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
-			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
-
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersStop );
@@ -71,8 +61,6 @@ namespace TimeLimit.NetProtocol {
 		}
 
 		public static void SendPauseTimersCommand( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
-			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
-
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersPause );
@@ -81,8 +69,6 @@ namespace TimeLimit.NetProtocol {
 		}
 
 		public static void SendResumeTimersCommand( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
-			if( Main.netMode != 2 ) { throw new Exception( "Not server" ); }
-
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersResume );
@@ -107,7 +93,7 @@ namespace TimeLimit.NetProtocol {
 			bool repeats = reader.ReadBoolean();
 			bool running = reader.ReadBoolean();
 			int total_timers = reader.ReadInt32();
-
+			
 			myworld.Logic.StartTimerFromNetwork( start_duration, duration, action, repeats, running, total_timers );
 		}
 

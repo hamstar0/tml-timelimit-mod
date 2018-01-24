@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using TimeLimit.NetProtocol;
 
+
 namespace TimeLimit {
 	class TimeLimitMod : Mod {
 		public static TimeLimitMod Instance { get; private set; }
@@ -96,10 +97,12 @@ namespace TimeLimit {
 		////////////////
 
 		public override void HandlePacket( BinaryReader reader, int player_who ) {
-			if( RequestPackets.HandlePacket( this, reader, player_who ) ) {
+			TimeLimitProtocolTypes protocol = (TimeLimitProtocolTypes)reader.ReadByte();
+
+			if( RequestPackets.HandlePacket( this, protocol, reader, player_who ) ) {
 				return;
 			}
-			if( SendPackets.HandlePacket( this, reader ) ) {
+			if( SendPackets.HandlePacket( this, protocol, reader ) ) {
 				return;
 			}
 			throw new Exception( "Unrecognized packet" );

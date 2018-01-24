@@ -1,5 +1,4 @@
-﻿using HamstarHelpers.WorldHelpers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System;
@@ -53,7 +52,7 @@ namespace TimeLimit.Logic {
 
 
 		public ActionTimer StartTimer( int start_duration, int duration, string action, bool repeats, bool is_running ) {
-			if( this.IsValidAction(action) ) { throw new Exception("Invalid action "+action); }
+			if( !this.IsValidAction(action) ) { throw new Exception( "Invalid action "+action ); }
 
 			var timer = new ActionTimer( duration, duration, action, repeats, is_running );
 			this.Timers.Add( timer );
