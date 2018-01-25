@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ModLoader;
 using TimeLimit.Logic;
 using TimeLimit.NetProtocol;
 
@@ -114,9 +115,10 @@ namespace TimeLimit {
 		////////////////
 
 		public static void TimerStart( string action_name, int seconds, bool repeats ) {
-			var myworld = TimeLimitMod.Instance.GetModWorld<TimeLimitWorld>();
+			var mymod = TimeLimitMod.Instance;
+			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
-			ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action_name, repeats, true );
+			ActionTimer timer = myworld.Logic.StartTimer( mymod, seconds * 60, seconds * 60, action_name, repeats, true );
 
 			if( Main.netMode == 2 ) {
 				SendPackets.SendStartTimerCommand( TimeLimitMod.Instance, timer, myworld.Logic.Timers.Count, -1 );
@@ -169,8 +171,10 @@ namespace TimeLimit {
 		////////////////
 
 		public static void AddCustomAction( string action_name, CustomTimerAction hook ) {
-			var myworld = TimeLimitMod.Instance.GetModWorld<TimeLimitWorld>();
-			myworld.Logic.CustomActions[ action_name ] = hook;
+			var mymod = TimeLimitMod.Instance;
+			var logic = mymod.Logic;
+
+			logic.CustomActions[ action_name ] = hook;
 		}
 	}
 }

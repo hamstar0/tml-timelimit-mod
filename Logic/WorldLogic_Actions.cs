@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 
 namespace TimeLimit.Logic {
-	partial class TimerLogic {
+	partial class WorldLogic {
 		internal void RunAction( TimeLimitMod mymod, string action, bool is_loop ) {
 			switch( action ) {
 			case "none":
@@ -65,11 +65,11 @@ namespace TimeLimit.Logic {
 			default:
 				var myworld = mymod.GetModWorld<TimeLimitWorld>();
 				
-				if( !myworld.Logic.CustomActions.ContainsKey(action) ) {
+				if( !mymod.Logic.CustomActions.ContainsKey(action) ) {
 					ErrorLogger.Log( "No such time's up event by name " + action );
 					break;
 				}
-				myworld.Logic.CustomActions[ action ]();
+				mymod.Logic.CustomActions[ action ]();
 				break;
 			}
 		}

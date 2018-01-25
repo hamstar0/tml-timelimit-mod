@@ -94,7 +94,7 @@ namespace TimeLimit.NetProtocol {
 			bool running = reader.ReadBoolean();
 			int total_timers = reader.ReadInt32();
 			
-			myworld.Logic.StartTimerFromNetwork( start_duration, duration, action, repeats, running, total_timers );
+			myworld.Logic.StartTimerFromNetwork( mymod, start_duration, duration, action, repeats, running, total_timers );
 		}
 
 		private static void ReceiveStopTimersCommand( TimeLimitMod mymod, BinaryReader reader ) {

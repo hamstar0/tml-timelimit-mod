@@ -8,9 +8,7 @@ using Terraria;
 
 
 namespace TimeLimit.Logic {
-	partial class TimerLogic {
-		internal IDictionary<string, CustomTimerAction> CustomActions = new Dictionary<string, CustomTimerAction>();
-
+	partial class WorldLogic {
 		public bool IsLoaded { get; private set; }
 
 		public IList<ActionTimer> Timers { get; private set; }
@@ -18,9 +16,9 @@ namespace TimeLimit.Logic {
 
 		////////////////
 
-		public TimerLogic() {
+		public WorldLogic() {
 			this.IsLoaded = false;
-			this.StopAllTimers();
+			this.Timers = new List<ActionTimer>();
 		}
 
 		public void Load( IList<int> start_durations, IList<int> durations, IList<string> actions, IList<bool> repeats, IList<bool> running ) {
@@ -32,27 +30,12 @@ namespace TimeLimit.Logic {
 			}
 		}
 
-		////////////////
-
-		public bool IsValidAction( string action ) {
-			switch( action ) {
-			case "none":
-			case "exit":
-			case "kill":
-			case "hardkill":
-			case "afflict":
-				return true;
-			default:
-				return this.CustomActions.ContainsKey( action );
-			}
-		}
-
 
 		////////////////
 
 
-		public ActionTimer StartTimer( int start_duration, int duration, string action, bool repeats, bool is_running ) {
-			if( !this.IsValidAction(action) ) { throw new Exception( "Invalid action "+action ); }
+		public ActionTimer StartTimer( TimeLimitMod mymod, int start_duration, int duration, string action, bool repeats, bool is_running ) {
+			if( !mymod.Logic.IsValidAction(action) ) { throw new Exception( "Invalid action "+action ); }
 
 			var timer = new ActionTimer( duration, duration, action, repeats, is_running );
 			this.Timers.Add( timer );

@@ -27,7 +27,8 @@ namespace TimeLimit.Commands {
 		////////////////
 		
 		public override void Action( CommandCaller caller, string input, string[] args ) {
-			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
+			var mymod = (TimeLimitMod)this.mod;
+			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 			int seconds;
 			bool repeats;
 			string action;
@@ -42,7 +43,7 @@ namespace TimeLimit.Commands {
 			}
 
 			action = args[1];
-			if( !myworld.Logic.IsValidAction(action) ) {
+			if( !mymod.Logic.IsValidAction(action) ) {
 				caller.Reply( args[1] + " is not a valid action", Color.Red );
 				return;
 			}
@@ -53,11 +54,11 @@ namespace TimeLimit.Commands {
 			}
 
 			try {
-				ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action, repeats, true );
+				ActionTimer timer = myworld.Logic.StartTimer( mymod, seconds * 60, seconds * 60, action, repeats, true );
 
 				if( Main.netMode != 0 ) {
 					caller.Reply( "Timer started." );
-					SendPackets.SendStartTimerCommand( (TimeLimitMod)this.mod, timer, myworld.Logic.Timers.Count, -1, -1 );
+					SendPackets.SendStartTimerCommand( mymod, timer, myworld.Logic.Timers.Count, -1, -1 );
 				} else {
 					caller.Reply( "Timer started to perform action '" + action + "'" + ( repeats ? " repeatedly." : "." ) );
 				}

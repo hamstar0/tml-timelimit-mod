@@ -9,7 +9,7 @@ using TimeLimit.Logic;
 
 namespace TimeLimit {
 	class TimeLimitWorld : ModWorld {
-		public TimerLogic Logic { get; private set; }
+		public WorldLogic Logic { get; private set; }
 		public string ID { get; private set; }
 		public bool HasCorrectID { get; private set; }
 
@@ -17,7 +17,6 @@ namespace TimeLimit {
 		////////////////
 
 		public override void Initialize() {
-			this.Logic = new TimerLogic();
 			this.ID = Guid.NewGuid().ToString( "D" );
 			this.HasCorrectID = false;  // 'Load()' decides if no pre-existing one is found
 		}
@@ -25,6 +24,8 @@ namespace TimeLimit {
 		////////////////
 
 		public override void Load( TagCompound tags ) {
+			var mymod = (TimeLimitMod)this.mod;
+
 			if( tags.ContainsKey( "world_id" ) ) {
 				IList<int> timer_start_durations;
 				IList<int> timer_durations;
@@ -50,6 +51,8 @@ namespace TimeLimit {
 		}
 
 		public override TagCompound Save() {
+			var mymod = (TimeLimitMod)this.mod;
+
 			IList<int> start_durations = new List<int>();
 			IList<int> durations = new List<int>();
 			IList<string> actions = new List<string>();
@@ -99,7 +102,7 @@ namespace TimeLimit {
 		////////////////
 
 		public override void PreUpdate() {
-			if( Main.netMode != 1 ) {	// Not client
+			if( Main.netMode != 1 ) {   // Not client
 				this.Logic.Update( (TimeLimitMod)this.mod );
 			}
 		}

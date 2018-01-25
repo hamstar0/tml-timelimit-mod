@@ -3,11 +3,11 @@ using Terraria;
 
 
 namespace TimeLimit.Logic {
-	partial class TimerLogic {
-		public void StartTimerFromNetwork( int start_duration, int duration, string action, bool repeats, bool running, int total_timers ) {
+	partial class WorldLogic {
+		public void StartTimerFromNetwork( TimeLimitMod mymod, int start_duration, int duration, string action, bool repeats, bool running, int total_timers ) {
 			var myplayer = Main.LocalPlayer.GetModPlayer<TimeLimitPlayer>();
 
-			this.StartTimer( start_duration, duration, action, repeats, running );
+			this.StartTimer( mymod, start_duration, duration, action, repeats, running );
 
 			myplayer.CheckModDataSync( total_timers );
 

@@ -5,6 +5,7 @@ using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
+using TimeLimit.Logic;
 using TimeLimit.NetProtocol;
 
 
@@ -35,6 +36,8 @@ namespace TimeLimit {
 
 		internal JsonConfig<TimeLimitConfigData> JsonConfig;
 		public TimeLimitConfigData Config { get { return JsonConfig.Data; } }
+
+		public ModLogic Logic = new ModLogic();
 
 
 		////////////////
