@@ -33,13 +33,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="API_Call.cs" />
     <Compile Include="API.cs" />
+    <Compile Include="Commands\TimerPauseCommand.cs" />
+    <Compile Include="Commands\TimerResumeCommand.cs" />
     <Compile Include="Commands\TimerAllResumeCommand.cs" />
     <Compile Include="Commands\TimerAllPauseCommand.cs" />
+    <Compile Include="Commands\TimerStopCommand.cs" />
     <Compile Include="Commands\TimerAllStopCommand.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Logic\ActionTimer.cs" />
     <Compile Include="Logic\ModLogic.cs" />
+    <Compile Include="Logic\WorldLogic_SaveLoad.cs" />
     <Compile Include="Logic\WorldLogic_Actions.cs" />
     <Compile Include="Logic\WorldLogic_Network.cs" />
     <Compile Include="NetProtocol\NetProtocolTypes.cs" />
@@ -77,7 +82,7 @@
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\terraria\Terraria.exe</HintPath>
     </Reference>
     <Reference Include="Terraria.Libraries.ReLogic.ReLogic">
-      <HintPath>..\..\Reference\Terraria.Libraries.ReLogic.ReLogic.dll</HintPath>
+      <HintPath>..\..\..\Reference\Terraria.Libraries.ReLogic.ReLogic.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

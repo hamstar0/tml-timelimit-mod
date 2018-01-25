@@ -25,7 +25,7 @@ namespace TimeLimit.Commands {
 			myworld.Logic.ResumeAllTimers();
 
 			if( Main.netMode == 2 ) {
-				SendPackets.SendResumeTimersCommand( (TimeLimitMod)this.mod, -1 );
+				SendPackets.SendResumeAllTimersCommand( (TimeLimitMod)this.mod, -1 );
 			}
 			caller.Reply( "Timers resumed." );
 		}

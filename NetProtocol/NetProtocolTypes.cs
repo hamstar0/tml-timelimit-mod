@@ -7,5 +7,8 @@
 		TimersStop,
 		TimersPause,
 		TimersResume,
+		TimersAllStop,
+		TimersAllPause,
+		TimersAllResume
 	}
 }

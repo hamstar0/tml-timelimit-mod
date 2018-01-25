@@ -21,18 +21,8 @@ namespace TimeLimit.Logic {
 			this.Timers = new List<ActionTimer>();
 		}
 
-		public void Load( IList<int> start_durations, IList<int> durations, IList<string> actions, IList<bool> repeats, IList<bool> running ) {
-			this.IsLoaded = true;
-
-			for( int i=0; i<start_durations.Count; i++ ) {
-				var timer = new ActionTimer( start_durations[i], durations[i], actions[i], repeats[i], running[i] );
-				this.Timers.Add( timer );
-			}
-		}
-
 
 		////////////////
-
 
 		public ActionTimer StartTimer( TimeLimitMod mymod, int start_duration, int duration, string action, bool repeats, bool is_running ) {
 			if( !mymod.Logic.IsValidAction(action) ) { throw new Exception( "Invalid action "+action ); }
@@ -43,11 +33,35 @@ namespace TimeLimit.Logic {
 			return timer;
 		}
 
-		public void StopAllTimers() {
-			this.Timers = new List<ActionTimer>();
+		public void StopTimers( string action ) {
+			foreach( ActionTimer timer in this.Timers.ToArray() ) {
+				if( timer.Action.Equals(action) ) {
+					this.Timers.Remove( timer );
+				}
+			}
+		}
+
+		public void PauseTimers( string action ) {
+			foreach( ActionTimer timer in this.Timers.ToArray() ) {
+				if( timer.Action.Equals( action ) ) {
+					timer.IsRunning = false;
+				}
+			}
+		}
+
+		public void ResumeTimers( string action ) {
+			foreach( ActionTimer timer in this.Timers.ToArray() ) {
+				if( timer.Action.Equals( action ) ) {
+					timer.IsRunning = true;
+				}
+			}
 		}
 
 		////////////////
+
+		public void StopAllTimers() {
+			this.Timers = new List<ActionTimer>();
+		}
 		
 		public void PauseAllTimers() {
 			foreach( var timer in this.Timers ) {

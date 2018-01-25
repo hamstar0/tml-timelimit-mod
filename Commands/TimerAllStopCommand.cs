@@ -25,7 +25,7 @@ namespace TimeLimit.Commands {
 			myworld.Logic.StopAllTimers();
 
 			if( Main.netMode == 2 ) {
-				SendPackets.SendStopTimersCommand( (TimeLimitMod)this.mod, -1 );
+				SendPackets.SendStopAllTimersCommand( (TimeLimitMod)this.mod, -1 );
 			}
 			caller.Reply( "Timers stopped." );
 		}

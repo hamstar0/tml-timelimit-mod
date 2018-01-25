@@ -28,7 +28,7 @@ namespace TimeLimit {
 		public override void OnEnterWorld( Player player ) {
 			var mymod = (TimeLimitMod)this.mod;
 
-			if( player.whoAmI == this.player.whoAmI ) {
+			if( player.whoAmI == Main.myPlayer ) {
 				if( Main.netMode == 0 ) {   // Not server
 					if( !mymod.JsonConfig.LoadFile() ) {
 						mymod.JsonConfig.SaveFile();
