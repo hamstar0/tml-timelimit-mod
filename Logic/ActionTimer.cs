@@ -9,6 +9,8 @@ namespace TimeLimit.Logic {
 				return "timer expiration";
 			case "exit":
 				return "forced to exit (to main menu)";
+			case "serverclose":
+				return "server closes";
 			case "kill":
 				return "everyone dies";
 			case "hardkill":
@@ -16,7 +18,7 @@ namespace TimeLimit.Logic {
 			case "afflict":
 				return "permanent status changes";
 			default:
-				return "custom action '" + action + "'";
+				return "'" + action + "'";
 			}
 		}
 

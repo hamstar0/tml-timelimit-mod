@@ -21,7 +21,7 @@ namespace TimeLimit.Commands {
 		public override string Usage { get { return "/timerstart 300 exit false"; } }
 		public override string Description { get { return "Starts a new timer."+
 			"\n   Parameters: <seconds> <action> <loops>"+
-			"\n   Actions types: 'none', 'exit', 'kill', 'hardkill', 'afflict', '<custom>'"; } }
+			"\n   Actions types: 'none', 'exit', 'serverclose', 'kill', 'hardkill', 'afflict', '<custom>'"; } }
 
 
 		////////////////

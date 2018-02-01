@@ -24,13 +24,21 @@ namespace TimeLimit.Logic {
 					TmlHelpers.ExitToMenu();
 				}
 				break;
+			case "serverclose":
+				if( Main.netMode == 2 ) {
+					TmlHelpers.ExitToDesktop();
+				} else {
+					Main.NewText( "Time's up. Bye, world!", Color.Red );
+					TmlHelpers.ExitToMenu();
+				}
+				break;
 			case "kill":
 				if( Main.netMode != 2 ) {   // Not server
 					for( int i = 0; i < Main.player.Length; i++ ) {
 						Player player = Main.player[i];
 						if( player == null || !player.active || player.dead ) { continue; }
 
-						player.KillMe( PlayerDeathReason.ByCustomReason( "Time's up." ), 9999, 0 );
+						player.KillMe( PlayerDeathReason.ByCustomReason("Time's up."), 9999, 0 );
 					}
 				}
 				break;
@@ -74,6 +82,8 @@ namespace TimeLimit.Logic {
 			}
 		}
 
+
+		////////////////
 
 		public void ApplyAffliction( TimeLimitMod mymod ) {
 			foreach( string affliction in mymod.Config.Afflictions ) {

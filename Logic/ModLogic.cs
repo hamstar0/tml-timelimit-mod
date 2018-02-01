@@ -13,6 +13,7 @@ namespace TimeLimit.Logic {
 			switch( action ) {
 			case "none":
 			case "exit":
+			case "serverclose":
 			case "kill":
 			case "hardkill":
 			case "afflict":

@@ -14,6 +14,7 @@ List of actions:
 
 * `none` - No action. Timer exists for show only.
 * `exit` - Exits the server/returns to menu.
+* `serverclose` - Closes the server.
 * `kill` - All players die.
 * `hardkill` - All players die as if in hardcore mode (i.e. permadeath).
 * `afflict` - All players receive a permanent affliction as specified in the config file's 'Afflictions' (de)buff list.
