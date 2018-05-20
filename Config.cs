@@ -40,7 +40,7 @@ namespace TimeLimit {
 		internal void LoadFromNetwork( TimeLimitMod mymod, string json ) {
 			var myplayer = Main.LocalPlayer.GetModPlayer<TimeLimitPlayer>();
 
-			mymod.JsonConfig.DeserializeMe( json );
+			mymod.ConfigJson.DeserializeMe( json );
 
 			myplayer.FinishModSettingsSync();
 		}

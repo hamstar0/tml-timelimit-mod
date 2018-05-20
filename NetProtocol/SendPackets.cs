@@ -42,7 +42,7 @@ namespace TimeLimit.NetProtocol {
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.ModSettings );
-			packet.Write( (string)mymod.JsonConfig.SerializeMe() );
+			packet.Write( (string)mymod.ConfigJson.SerializeMe() );
 
 			packet.Send( to_who, ignore_who );
 		}

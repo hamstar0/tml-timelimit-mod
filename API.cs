@@ -15,7 +15,7 @@ namespace TimeLimit {
 		}
 
 		public static void SaveModSettingsChanges() {
-			TimeLimitMod.Instance.JsonConfig.SaveFile();
+			TimeLimitMod.Instance.ConfigJson.SaveFile();
 		}
 
 

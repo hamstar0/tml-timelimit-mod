@@ -30,8 +30,8 @@ namespace TimeLimit {
 
 			if( player.whoAmI == Main.myPlayer ) {
 				if( Main.netMode == 0 ) {   // Not server
-					if( !mymod.JsonConfig.LoadFile() ) {
-						mymod.JsonConfig.SaveFile();
+					if( !mymod.ConfigJson.LoadFile() ) {
+						mymod.ConfigJson.SaveFile();
 						ErrorLogger.Log( "Time Limit config " + TimeLimitConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
 					}
 				}

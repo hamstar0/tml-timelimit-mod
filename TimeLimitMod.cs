@@ -17,15 +17,15 @@ namespace TimeLimit {
 		public static string GithubProjectName { get { return "tml-timelimit-mod"; } }
 
 		public static string ConfigFileRelativePath {
-			get { return JsonConfig<TimeLimitConfigData>.RelativePath + Path.DirectorySeparatorChar + TimeLimitConfigData.ConfigFileName; }
+			get { return JsonConfig.ConfigSubfolder + Path.DirectorySeparatorChar + TimeLimitConfigData.ConfigFileName; }
 		}
 		public static void ReloadConfigFromFile() {
 			if( Main.netMode != 0 ) {
 				throw new Exception( "Cannot reload configs outside of single player." );
 			}
 			if( TimeLimitMod.Instance != null ) {
-				if( !TimeLimitMod.Instance.JsonConfig.LoadFile() ) {
-					TimeLimitMod.Instance.JsonConfig.SaveFile();
+				if( !TimeLimitMod.Instance.ConfigJson.LoadFile() ) {
+					TimeLimitMod.Instance.ConfigJson.SaveFile();
 				}
 			}
 		}
@@ -34,8 +34,8 @@ namespace TimeLimit {
 
 		////////////////
 
-		internal JsonConfig<TimeLimitConfigData> JsonConfig;
-		public TimeLimitConfigData Config { get { return JsonConfig.Data; } }
+		internal JsonConfig<TimeLimitConfigData> ConfigJson;
+		public TimeLimitConfigData Config { get { return ConfigJson.Data; } }
 
 		public ModLogic Logic = new ModLogic();
 
@@ -49,7 +49,7 @@ namespace TimeLimit {
 				AutoloadSounds = true
 			};
 
-			this.JsonConfig = new JsonConfig<TimeLimitConfigData>( TimeLimitConfigData.ConfigFileName,
+			this.ConfigJson = new JsonConfig<TimeLimitConfigData>( TimeLimitConfigData.ConfigFileName,
 				ConfigurationDataBase.RelativePath, new TimeLimitConfigData() );
 		}
 
@@ -61,13 +61,13 @@ namespace TimeLimit {
 		}
 
 		private void LoadConfigs() {
-			if( !this.JsonConfig.LoadFile() ) {
-				this.JsonConfig.SaveFile();
+			if( !this.ConfigJson.LoadFile() ) {
+				this.ConfigJson.SaveFile();
 			}
 
 			if( this.Config.UpdateToLatestVersion() ) {
 				ErrorLogger.Log( "Time Limit updated to " + TimeLimitConfigData.ConfigVersion.ToString() );
-				this.JsonConfig.SaveFile();
+				this.ConfigJson.SaveFile();
 			}
 		}
 
