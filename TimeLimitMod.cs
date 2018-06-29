@@ -1,4 +1,4 @@
-using HamstarHelpers.Utilities.Config;
+using HamstarHelpers.Components.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +28,13 @@ namespace TimeLimit {
 					TimeLimitMod.Instance.ConfigJson.SaveFile();
 				}
 			}
+		}
+		public static void ResetConfigFromDefaults() {
+			if( Main.netMode != 0 ) {
+				throw new Exception( "Cannot reset to default configs outside of single player." );
+			}
+			TimeLimitMod.Instance.ConfigJson.SetData( new TimeLimitConfigData() );
+			TimeLimitMod.Instance.ConfigJson.SaveFile();
 		}
 
 

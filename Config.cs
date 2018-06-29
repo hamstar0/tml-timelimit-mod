@@ -1,6 +1,7 @@
-﻿using HamstarHelpers.Utilities.Config;
+﻿using HamstarHelpers.Components.Config;
 using System;
 using Terraria;
+
 
 namespace TimeLimit {
 	public class TimeLimitConfigData : ConfigurationDataBase {

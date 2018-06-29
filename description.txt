@@ -18,4 +18,4 @@ List of actions:
 - 'unafflict' - All players recover from permanent afflictions from the (de)buff list.
 - <custom action name> - Same as 'none', unless another mod implements the named action via. API.
 
-See the Hamstar's Helpers Control Panel for configuration options.
+See the Mod Helpers Control Panel for configuration options.

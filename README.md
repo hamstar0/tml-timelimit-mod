@@ -21,4 +21,4 @@ List of actions:
 * `unafflict` - All players recover from permanent afflictions from the (de)buff list.
 * (custom action name) - Same as `none`, unless another mod implements the named action via. API.
 
-See the [Hamstar's Helpers](https://forums.terraria.org/index.php?threads/hamstars-mods-past-present-and-future.63713/) Control Panel for configuration options.
+See the [Mod Helpers](https://forums.terraria.org/index.php?threads/mod-helpers-a-modders-mod-for-mods-and-modding.63670/) Control Panel for configuration options.
