@@ -52,6 +52,7 @@
     <Compile Include="NetProtocol\SendPackets.cs" />
     <Compile Include="NetProtocol\RequestPackets.cs" />
     <Compile Include="TimeLimitMod.cs" />
+    <Compile Include="TimeLimitPlayer_Load.cs" />
     <Compile Include="TimeLimitPlayer.cs" />
     <Compile Include="TimeLimitWorld.cs" />
     <Compile Include="Commands\TimerStartCommand.cs" />

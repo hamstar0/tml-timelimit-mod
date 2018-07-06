@@ -62,8 +62,12 @@ namespace TimeLimit.Commands {
 				} else {
 					caller.Reply( "Timer started to perform action '" + action + "'" + ( repeats ? " repeatedly." : "." ) );
 				}
+				
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Log( "TimeLimit.TimerStartCommand.Action - Success." );
+				}
 			} catch( Exception e ) {
-				LogHelpers.Log( e.ToString() );
+				LogHelpers.Log( "TimeLimit.TimerStartCommand.Action - " + e.ToString() );
 			}
 		}
 	}

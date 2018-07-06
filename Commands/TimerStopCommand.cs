@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.DebugHelpers;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.NetProtocol;
@@ -40,7 +41,12 @@ namespace TimeLimit.Commands {
 			if( Main.netMode == 2 ) {
 				SendPackets.SendStopTimersCommand( (TimeLimitMod)this.mod, action, - 1 );
 			}
+
 			caller.Reply( "Timer '"+action+"' stopped." );
+			
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "TimeLimit.TimerStopCommand.Action - Success." );
+			}
 		}
 	}
 }

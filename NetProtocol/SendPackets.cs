@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using HamstarHelpers.DebugHelpers;
+using System.IO;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
 
@@ -6,6 +7,10 @@ using TimeLimit.Logic;
 namespace TimeLimit.NetProtocol {
 	static class SendPackets {
 		public static bool HandlePacket( TimeLimitMod mymod, TimeLimitProtocolTypes protocol, BinaryReader reader ) {
+			if( mymod.Config.DebugModeNetInfo ) {
+				LogHelpers.Log( ">> TimeLimit.SendPackets.HandlePacket - " + protocol.ToString() );
+			}
+
 			switch( protocol ) {
 			case TimeLimitProtocolTypes.ModSettings:
 				SendPackets.ReceiveModSettings( mymod, reader );

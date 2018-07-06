@@ -1,9 +1,14 @@
-﻿using System;
+﻿using HamstarHelpers.DebugHelpers;
+using System;
 
 
 namespace TimeLimit {
 	public static partial class TimeLimitAPI {
 		internal static object Call( string call_type, params object[] args ) {
+			if( TimeLimitMod.Instance.Config.DebugModeInfo ) {
+				LogHelpers.Log( "TimeLimit.TimeLimitAPI.Call - "+call_type+": "+string.Join(",", args) );
+			}
+
 			string seconds_str;
 			string repeats_str;
 			int seconds;
