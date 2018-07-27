@@ -1,4 +1,5 @@
 ﻿using HamstarHelpers.BuffHelpers;
+using HamstarHelpers.DebugHelpers;
 using HamstarHelpers.PlayerHelpers;
 using HamstarHelpers.TmlHelpers;
 using Microsoft.Xna.Framework;
@@ -10,6 +11,10 @@ using Terraria.ModLoader;
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
 		internal void RunAction( TimeLimitMod mymod, string action, bool is_loop ) {
+			if( mymod.Config.DebugModeInfo ) {
+				LogHelpers.Log( "TimieLimit.WorldLogic.RunAction - " + action + " (loops? " + is_loop + ")" );
+			}
+
 			switch( action ) {
 			case "none":
 				if( !is_loop ) {
@@ -54,6 +59,10 @@ namespace TimeLimit.Logic {
 				break;
 			case "afflict":
 				var afflictions = string.Join( ",", mymod.Config.Afflictions );
+
+				if( mymod.Config.DebugModeInfo ) {
+					LogHelpers.Log( " TimieLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
+				}
 
 				if( !is_loop ) {
 					Main.NewText( "Time's up. You now have the following: " + afflictions, Color.Red );

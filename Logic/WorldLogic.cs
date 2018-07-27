@@ -35,7 +35,7 @@ namespace TimeLimit.Logic {
 
 		public void StopTimers( string action ) {
 			foreach( ActionTimer timer in this.Timers.ToArray() ) {
-				if( timer.Action.Equals(action) ) {
+				if( timer.Action == action ) {
 					this.Timers.Remove( timer );
 				}
 			}
@@ -43,7 +43,7 @@ namespace TimeLimit.Logic {
 
 		public void PauseTimers( string action ) {
 			foreach( ActionTimer timer in this.Timers.ToArray() ) {
-				if( timer.Action.Equals( action ) ) {
+				if( timer.Action == action ) {
 					timer.IsRunning = false;
 				}
 			}
@@ -51,7 +51,7 @@ namespace TimeLimit.Logic {
 
 		public void ResumeTimers( string action ) {
 			foreach( ActionTimer timer in this.Timers.ToArray() ) {
-				if( timer.Action.Equals( action ) ) {
+				if( timer.Action == action ) {
 					timer.IsRunning = true;
 				}
 			}
