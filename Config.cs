@@ -1,5 +1,5 @@
 ﻿using HamstarHelpers.Components.Config;
-using HamstarHelpers.DebugHelpers;
+using HamstarHelpers.Helpers.DebugHelpers;
 using System;
 using Terraria;
 
@@ -17,7 +17,7 @@ namespace TimeLimit {
 		public bool DebugModeInfo = false;
 		public bool DebugModeNetInfo = false; 
 
-		public string[] Afflictions = { "Potion Sickness", "Darkness", "Bleeding", "Weak", "Broken Armor", "Ichor", "Chaos State", "Stinky", "Creative Shock" };
+		public string[] Afflictions = {};
 
 		public int TimerDisplayX = -384;
 		public int TimerDisplayY = -256;
@@ -25,6 +25,10 @@ namespace TimeLimit {
 
 
 		////////////////
+
+		private void SetDefaults() {
+			this.Afflictions = new string[] { "Potion Sickness", "Darkness", "Bleeding", "Weak", "Broken Armor", "Ichor", "Chaos State", "Stinky", "Creative Shock" };
+		}
 
 		public bool UpdateToLatestVersion() {
 			var new_config = new TimeLimitConfigData();
@@ -34,6 +38,10 @@ namespace TimeLimit {
 
 			if( vers_since >= TimeLimitConfigData.ConfigVersion ) {
 				return false;
+			}
+
+			if( this.VersionSinceUpdate == "" ) {
+				this.SetDefaults();
 			}
 
 			this.VersionSinceUpdate = TimeLimitConfigData.ConfigVersion.ToString();

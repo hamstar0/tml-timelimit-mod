@@ -1,7 +1,7 @@
-﻿using HamstarHelpers.BuffHelpers;
-using HamstarHelpers.DebugHelpers;
-using HamstarHelpers.PlayerHelpers;
-using HamstarHelpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.BuffHelpers;
+using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.PlayerHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -12,7 +12,7 @@ namespace TimeLimit.Logic {
 	partial class WorldLogic {
 		internal void RunAction( TimeLimitMod mymod, string action, bool is_loop ) {
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "TimieLimit.WorldLogic.RunAction - " + action + " (loops? " + is_loop + ")" );
+				LogHelpers.Log( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + is_loop + ")" );
 			}
 
 			switch( action ) {
@@ -61,7 +61,7 @@ namespace TimeLimit.Logic {
 				var afflictions = string.Join( ",", mymod.Config.Afflictions );
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( " TimieLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
+					LogHelpers.Log( " TimeLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
 				}
 
 				if( !is_loop ) {

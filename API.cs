@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
 using System.Collections.Generic;
 using Terraria;
 using TimeLimit.Logic;

@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.DebugHelpers;
 using System.IO;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
