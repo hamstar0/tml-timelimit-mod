@@ -16,6 +16,7 @@ namespace TimeLimit.Logic {
 			case "kill":
 			case "hardkill":
 			case "afflict":
+			case "unafflict":
 				return true;
 			default:
 				return this.CustomActions.ContainsKey( action );
