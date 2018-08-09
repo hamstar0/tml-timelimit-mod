@@ -17,7 +17,7 @@ namespace TimeLimit.Logic {
 				return "game over";
 			case "afflict":
 				return "permanent status changes";
-			case "unafflict":
+			case "unafflict": 
 				return "recovers from permanent status changes";
 			default:
 				return "'" + action + "'";
