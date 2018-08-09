@@ -14,8 +14,8 @@ namespace TimeLimit.Commands {
 				return CommandType.Console;
 			}
 		}
-		public override string Command { get { return "timerallresume"; } }
-		public override string Usage { get { return "/timerallresume"; } }
+		public override string Command { get { return "timer-resume-all"; } }
+		public override string Usage { get { return "/"+this.Command; } }
 		public override string Description { get { return "Resumes all running timers."; } }
 
 

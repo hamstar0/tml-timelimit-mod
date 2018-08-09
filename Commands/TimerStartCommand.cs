@@ -17,8 +17,8 @@ namespace TimeLimit.Commands {
 				return CommandType.Console;
 			}
 		}
-		public override string Command { get { return "timerstart"; } }
-		public override string Usage { get { return "/timerstart 300 exit false"; } }
+		public override string Command { get { return "timer-start"; } }
+		public override string Usage { get { return "/"+this.Command+" 300 exit false"; } }
 		public override string Description { get { return "Starts a new timer."+
 			"\n   Parameters: <seconds> <action> <loops>"+
 			"\n   Actions types: 'none', 'exit', 'serverclose', 'kill', 'hardkill', 'afflict', '<custom>'"; } }

@@ -38,8 +38,8 @@ namespace TimeLimit {
 		}
 
 		public override void OnEnterWorld( Player player ) {
-			if( player.whoAmI == Main.myPlayer ) { return; }
-			if( this.player.whoAmI == Main.myPlayer ) { return; }
+			if( player.whoAmI != Main.myPlayer ) { return; }
+			if( this.player.whoAmI != Main.myPlayer ) { return; }
 
 			var mymod = (TimeLimitMod)this.mod;
 			
