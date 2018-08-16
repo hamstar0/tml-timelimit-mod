@@ -5,18 +5,18 @@ using TimeLimit.NetProtocol;
 
 namespace TimeLimit {
 	partial class TimeLimitPlayer : ModPlayer {
-		private void OnSingleConnect() {
+		private void OnConnectSingle() {
 			this.HasSyncedModSettings = true;
 			this.HasSyncedModData = true;
 		}
 
-		private void OnClientConnect() {
+		private void OnConnectCurrentClient() {
 			var mymod = (TimeLimitMod)this.mod;
 			RequestPackets.RequestModSettings( mymod );
 			RequestPackets.RequestTimers( mymod );
 		}
 
-		private void OnServerConnect() {
+		private void OnConnectServer() {
 			this.HasSyncedModSettings = true;
 			this.HasSyncedModData = true;
 		}

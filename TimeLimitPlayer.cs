@@ -32,7 +32,7 @@ namespace TimeLimit {
 
 			if( Main.netMode == 2 ) {
 				if( to_who == -1 && from_who == this.player.whoAmI ) {
-					this.OnServerConnect();
+					this.OnConnectServer();
 				}
 			}
 		}
@@ -51,10 +51,10 @@ namespace TimeLimit {
 			}
 
 			if( Main.netMode == 0 ) {   // NOT client
-				this.OnSingleConnect();
+				this.OnConnectSingle();
 			}
 			if( Main.netMode == 1 ) {
-				this.OnClientConnect();
+				this.OnConnectCurrentClient();
 			}
 		}
 

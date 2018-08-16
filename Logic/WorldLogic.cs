@@ -79,20 +79,31 @@ namespace TimeLimit.Logic {
 		////////////////
 
 		public void Update( TimeLimitMod mymod ) {
-			IList<int> expired = new List<int>();
+			IDictionary<ActionTimer, bool> will_run = new Dictionary<ActionTimer, bool>();
 
 			foreach( ActionTimer timer in this.Timers.ToArray() ) {
-				if( timer.Duration == 1 ) {
-					this.RunAction( mymod, timer.Action, timer.IsRunning );
-				}
+				// This way, each timer's action runs only when the timer is running:
+				bool runs = timer.Duration == 1;
 
 				timer.Update();
+				
+				if( runs ) {
+					will_run[ timer ] = timer.IsExpired();
+				}
 
 				if( timer.IsExpired() ) {
 					this.Timers.Remove( timer );
 				}
 			}
+
+			foreach( var kv in will_run ) {
+				string action_name = kv.Key.Action;
+				bool is_expired = kv.Value;
+
+				this.RunAction( mymod, action_name, !is_expired );
+			}
 		}
+
 
 		////////////////
 
