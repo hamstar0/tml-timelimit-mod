@@ -1,5 +1,5 @@
 author = hamstar
-version = 1.1.7.1
+version = 1.1.7.2
 displayName = Time Limit
 modReferences = HamstarHelpers@2.0.3
 buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
