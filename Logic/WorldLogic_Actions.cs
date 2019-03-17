@@ -10,14 +10,16 @@ using Terraria.ModLoader;
 
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
-		internal void RunAction( TimeLimitMod mymod, string action, bool is_loop ) {
+		internal void RunAction( string action, bool isLoop ) {
+			var mymod = TimeLimitMod.Instance;
+
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + is_loop + ")" );
+				LogHelpers.Log( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + isLoop + ")" );
 			}
 
 			switch( action ) {
 			case "none":
-				if( !is_loop ) {
+				if( !isLoop ) {
 					Main.NewText( "Time's up.", Color.Red );
 				} else {
 					Main.NewText( "Timer restarting.", Color.Yellow );
@@ -64,20 +66,20 @@ namespace TimeLimit.Logic {
 					LogHelpers.Log( " TimeLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
 				}
 
-				if( !is_loop ) {
+				if( !isLoop ) {
 					Main.NewText( "Time's up. You now have the following: " + afflictions, Color.Red );
 				} else {
 					Main.NewText( "Timer restarting. You now have the following: " + afflictions, Color.Yellow );
 				}
-				this.ApplyAffliction( mymod );
+				this.ApplyAffliction();
 				break;
 			case "unafflict":
-				if( !is_loop ) {
+				if( !isLoop ) {
 					Main.NewText( "Time's up. All afflictions removed.", Color.Red );
 				} else {
 					Main.NewText( "Timer restarting. All afflictions removed.", Color.Yellow );
 				}
-				this.RemoveAffliction( mymod );
+				this.RemoveAffliction();
 				break;
 			default:
 				var myworld = mymod.GetModWorld<TimeLimitWorld>();
@@ -94,7 +96,9 @@ namespace TimeLimit.Logic {
 
 		////////////////
 
-		public void ApplyAffliction( TimeLimitMod mymod ) {
+		public void ApplyAffliction() {
+			var mymod = TimeLimitMod.Instance;
+
 			foreach( string affliction in mymod.Config.Afflictions ) {
 				if( !BuffIdentityHelpers.NamesToIds.ContainsKey(affliction) ) {
 					ErrorLogger.Log( "No such afflication ((de)buff) by name " + affliction );
@@ -105,13 +109,15 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 					
-					int buff_id = BuffIdentityHelpers.NamesToIds[affliction];
-					BuffHelpers.AddPermaBuff( player, buff_id );
+					int buffId = BuffIdentityHelpers.NamesToIds[affliction];
+					BuffHelpers.AddPermaBuff( player, buffId );
 				}
 			}
 		}
 		
-		public void RemoveAffliction( TimeLimitMod mymod ) {
+		public void RemoveAffliction() {
+			var mymod = TimeLimitMod.Instance;
+
 			foreach( string affliction in mymod.Config.Afflictions ) {
 				if( !BuffIdentityHelpers.NamesToIds.ContainsKey( affliction ) ) {
 					ErrorLogger.Log( "No such afflication ((de)buff) by name " + affliction );
@@ -122,8 +128,8 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 
-					int buff_id = BuffIdentityHelpers.NamesToIds[affliction];
-					BuffHelpers.RemovePermaBuff( player, buff_id );
+					int buffId = BuffIdentityHelpers.NamesToIds[affliction];
+					BuffHelpers.RemovePermaBuff( player, buffId );
 				}
 			}
 		}

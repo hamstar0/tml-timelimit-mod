@@ -11,9 +11,8 @@ namespace TimeLimit {
 		}
 
 		private void OnConnectCurrentClient() {
-			var mymod = (TimeLimitMod)this.mod;
-			RequestPackets.RequestModSettings( mymod );
-			RequestPackets.RequestTimers( mymod );
+			RequestPackets.RequestModSettings();
+			RequestPackets.RequestTimers();
 		}
 
 		private void OnConnectServer() {
@@ -28,13 +27,13 @@ namespace TimeLimit {
 			this.HasSyncedModSettings = true;
 		}
 
-		public void CheckModDataSync( int total_timer_count ) {
+		public void CheckModDataSync( int totalTimerCount ) {
 			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
-			int current_timer_count = myworld.Logic.Timers.Count;
+			int currentTimerCount = myworld.Logic.Timers.Count;
 
-			this.HasSyncedModData = current_timer_count == total_timer_count;
+			this.HasSyncedModData = currentTimerCount == totalTimerCount;
 
-			if( current_timer_count > total_timer_count ) {
+			if( currentTimerCount > totalTimerCount ) {
 				LogHelpers.Log( "Timers exceeds server's indicated amount." );
 			}
 		}

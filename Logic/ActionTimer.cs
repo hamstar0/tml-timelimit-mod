@@ -25,13 +25,13 @@ namespace TimeLimit.Logic {
 		}
 
 		public static string RenderDuration( int duration ) {
-			int total_seconds = duration / 60;
-			int total_minutes = total_seconds / 60;
-			int total_hours = total_minutes / 60;
-			int minutes = total_minutes - ( total_hours * 60 );
-			int seconds = total_seconds - ( total_minutes * 60 );
+			int totalSeconds = duration / 60;
+			int totalMinutes = totalSeconds / 60;
+			int totalHours = totalMinutes / 60;
+			int minutes = totalMinutes - ( totalHours * 60 );
+			int seconds = totalSeconds - ( totalMinutes * 60 );
 
-			return total_hours.ToString( "D2" ) + ":" + minutes.ToString( "D2" ) + ":" + seconds.ToString( "D2" );
+			return totalHours.ToString( "D2" ) + ":" + minutes.ToString( "D2" ) + ":" + seconds.ToString( "D2" );
 		}
 
 
@@ -47,12 +47,12 @@ namespace TimeLimit.Logic {
 
 		////////////////
 
-		public ActionTimer( int start_duration, int duration, string action, bool repeats, bool is_running ) {
-			this.StartDuration = start_duration;
+		public ActionTimer( int startDuration, int duration, string action, bool repeats, bool isRunning ) {
+			this.StartDuration = startDuration;
 			this.Duration = duration;
 			this.Action = action;
 			this.Repeats = repeats;
-			this.IsRunning = is_running;
+			this.IsRunning = isRunning;
 		}
 
 		////

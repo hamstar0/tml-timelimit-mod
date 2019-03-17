@@ -1,4 +1,5 @@
 using HamstarHelpers.Components.Config;
+using HamstarHelpers.Components.Errors;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -62,30 +63,30 @@ namespace TimeLimit {
 		////////////////
 
 		public override object Call( params object[] args ) {
-			if( args.Length == 0 ) { throw new Exception( "Undefined call type." ); }
+			if( args.Length == 0 ) { throw new HamstarException( "Undefined call type." ); }
 
-			string call_type = args[0] as string;
-			if( args == null ) { throw new Exception( "Invalid call type." ); }
+			string callType = args[0] as string;
+			if( args == null ) { throw new HamstarException( "Invalid call type." ); }
 
-			var new_args = new object[args.Length - 1];
-			Array.Copy( args, 1, new_args, 0, args.Length - 1 );
+			var newArgs = new object[args.Length - 1];
+			Array.Copy( args, 1, newArgs, 0, args.Length - 1 );
 
-			return TimeLimitAPI.Call( call_type, new_args );
+			return TimeLimitAPI.Call( callType, newArgs );
 		}
 
 
 		////////////////
 
-		public override void HandlePacket( BinaryReader reader, int player_who ) {
+		public override void HandlePacket( BinaryReader reader, int playerWho ) {
 			TimeLimitProtocolTypes protocol = (TimeLimitProtocolTypes)reader.ReadByte();
 
-			if( RequestPackets.HandlePacket( this, protocol, reader, player_who ) ) {
+			if( RequestPackets.HandlePacket( protocol, reader, playerWho ) ) {
 				return;
 			}
-			if( SendPackets.HandlePacket( this, protocol, reader ) ) {
+			if( SendPackets.HandlePacket( protocol, reader ) ) {
 				return;
 			}
-			throw new Exception( "Unrecognized packet" );
+			throw new HamstarException( "Unrecognized packet" );
 		}
 
 
@@ -94,18 +95,18 @@ namespace TimeLimit {
 		public override void ModifyInterfaceLayers( List<GameInterfaceLayer> layers ) {
 			int idx = layers.FindIndex( layer => layer.Name.Equals( "Vanilla: Mouse Text" ) );
 			if( idx != -1 ) {
-				GameInterfaceDrawMethod draw_method = delegate {
+				GameInterfaceDrawMethod drawMethod = delegate {
 					var myworld = this.GetModWorld<TimeLimitWorld>();
 
-					myworld.Logic.DrawTimers( this, Main.spriteBatch );
+					myworld.Logic.DrawTimers( Main.spriteBatch );
 
 					return true;
 				};
 
-				var interface_layer = new LegacyGameInterfaceLayer( "TimeLimit: Timers", draw_method,
+				var interfaceLayer = new LegacyGameInterfaceLayer( "TimeLimit: Timers", drawMethod,
 					InterfaceScaleType.UI );
 
-				layers.Insert( idx, interface_layer );
+				layers.Insert( idx, interfaceLayer );
 			}
 		}
 	}

@@ -17,11 +17,11 @@ namespace TimeLimit.Commands {
 				return CommandType.Console;
 			}
 		}
-		public override string Command { get { return "timer-start"; } }
-		public override string Usage { get { return "/"+this.Command+" 300 exit false"; } }
-		public override string Description { get { return "Starts a new timer."+
+		public override string Command => "timer-start";
+		public override string Usage => "/"+this.Command+" 300 exit false";
+		public override string Description => "Starts a new timer."+
 			"\n   Parameters: <seconds> <action> <loops>"+
-			"\n   Actions types: 'none', 'exit', 'serverclose', 'kill', 'hardkill', 'afflict', '<custom>'"; } }
+			"\n   Actions types: 'none', 'exit', 'serverclose', 'kill', 'hardkill', 'afflict', '<custom>'";
 
 
 		////////////////
@@ -54,20 +54,20 @@ namespace TimeLimit.Commands {
 			}
 
 			try {
-				ActionTimer timer = myworld.Logic.StartTimer( mymod, seconds * 60, seconds * 60, action, repeats, true );
+				ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, action, repeats, true );
 
 				if( Main.netMode != 0 ) {
 					caller.Reply( "Timer started." );
-					SendPackets.SendStartTimerCommand( mymod, timer, myworld.Logic.Timers.Count, -1, -1 );
+					SendPackets.SendStartTimerCommand( timer, myworld.Logic.Timers.Count, -1, -1 );
 				} else {
 					caller.Reply( "Timer started to perform action '" + action + "'" + ( repeats ? " repeatedly." : "." ) );
 				}
 				
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( "TimeLimit.TimerStartCommand.Action - Success." );
+					LogHelpers.Alert( "Success." );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Log( "TimeLimit.TimerStartCommand.Action - " + e.ToString() );
+				LogHelpers.Warn( e.ToString() );
 			}
 		}
 	}

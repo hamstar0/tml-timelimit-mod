@@ -6,31 +6,31 @@ using Terraria.ModLoader.IO;
 
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
-		public void Load( TimeLimitMod mymod, TagCompound tags ) {
-			IList<int> timer_start_durations;
-			IList<int> timer_durations;
-			IList<string> timer_actions;
-			IList<bool> timer_repeats;
-			IList<bool> timer_runs;
+		public void Load( TagCompound tags ) {
+			IList<int> timerStartDurations;
+			IList<int> timerDurations;
+			IList<string> timerActions;
+			IList<bool> timerRepeats;
+			IList<bool> timerRuns;
 
 			if( tags.ContainsKey( "timer_start_durations" ) ) {
-				timer_start_durations = tags.GetList<int>( "timer_start_durations" );
-				timer_durations = tags.GetList<int>( "timer_durations" );
-				timer_actions = tags.GetList<string>( "timer_actions" );
-				timer_repeats = tags.GetList<bool>( "timer_repeats" );
+				timerStartDurations = tags.GetList<int>( "timer_start_durations" );
+				timerDurations = tags.GetList<int>( "timer_durations" );
+				timerActions = tags.GetList<string>( "timer_actions" );
+				timerRepeats = tags.GetList<bool>( "timer_repeats" );
 				if( tags.ContainsKey( "timer_runs" ) ) {
-					timer_runs = tags.GetList<bool>( "timer_runs" );
+					timerRuns = tags.GetList<bool>( "timer_runs" );
 				} else {
-					timer_runs = new List<bool>( timer_durations.Count );
+					timerRuns = new List<bool>( timerDurations.Count );
 				}
 
-				for( int i = 0; i < timer_start_durations.Count; i++ ) {
-					int start_duration = timer_start_durations[i];
-					int duration = timer_durations[i];
-					string action = timer_actions[i];
-					bool repeats = timer_repeats[i];
-					bool is_runninng = timer_runs[i];
-					var timer = new ActionTimer( start_duration, duration, action, repeats, is_runninng );
+				for( int i = 0; i < timerStartDurations.Count; i++ ) {
+					int startDuration = timerStartDurations[i];
+					int duration = timerDurations[i];
+					string action = timerActions[i];
+					bool repeats = timerRepeats[i];
+					bool isRunninng = timerRuns[i];
+					var timer = new ActionTimer( startDuration, duration, action, repeats, isRunninng );
 
 					this.Timers.Add( timer );
 				}
@@ -39,15 +39,15 @@ namespace TimeLimit.Logic {
 			this.IsLoaded = true;
 		}
 
-		public TagCompound Save( TimeLimitMod mymod ) {
-			IList<int> start_durations = new List<int>();
+		public TagCompound Save() {
+			IList<int> startDurations = new List<int>();
 			IList<int> durations = new List<int>();
 			IList<string> actions = new List<string>();
 			IList<bool> repeats = new List<bool>();
 			IList<bool> runs = new List<bool>();
 
 			foreach( var timer in this.Timers ) {
-				start_durations.Add( timer.StartDuration );
+				startDurations.Add( timer.StartDuration );
 				durations.Add( timer.Duration );
 				actions.Add( timer.Action );
 				repeats.Add( timer.Repeats );
@@ -56,7 +56,7 @@ namespace TimeLimit.Logic {
 
 			var tags = new TagCompound();
 			try {
-				tags.Set( "timer_start_durations", start_durations );
+				tags.Set( "timer_start_durations", startDurations );
 				tags.Set( "timer_durations", durations );
 				tags.Set( "timer_actions", actions );
 				tags.Set( "timer_repeats", repeats );

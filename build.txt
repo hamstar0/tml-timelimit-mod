@@ -1,7 +1,7 @@
 author = hamstar
-version = 1.1.7.2
+version = 1.2.0
 displayName = Time Limit
-modReferences = HamstarHelpers@2.0.3
+modReferences = HamstarHelpers@4.2.4
 buildIgnore = *.csproj, *.user, *.bat, obj\*, bin\*, .vs\*, .git\*
 languageVersion = 6
 homepage = https://forums.terraria.org/index.php?threads/time-limit-apply-game-altering-effects-after-a-set-duration.64893/

@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HamstarHelpers.Components.Errors;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -14,6 +14,7 @@ namespace TimeLimit.Logic {
 		public IList<ActionTimer> Timers { get; private set; }
 
 
+
 		////////////////
 
 		public WorldLogic() {
@@ -24,10 +25,14 @@ namespace TimeLimit.Logic {
 
 		////////////////
 
-		public ActionTimer StartTimer( TimeLimitMod mymod, int start_duration, int duration, string action, bool repeats, bool is_running ) {
-			if( !mymod.Logic.IsValidAction(action) ) { throw new Exception( "Invalid action "+action ); }
+		public ActionTimer StartTimer( int startDuration, int duration, string action, bool repeats, bool isRunning ) {
+			var mymod = TimeLimitMod.Instance;
 
-			var timer = new ActionTimer( duration, duration, action, repeats, is_running );
+			if( !mymod.Logic.IsValidAction(action) ) {
+				throw new HamstarException( "Invalid action "+action );
+			}
+
+			var timer = new ActionTimer( duration, duration, action, repeats, isRunning );
 			this.Timers.Add( timer );
 
 			return timer;
@@ -78,8 +83,8 @@ namespace TimeLimit.Logic {
 
 		////////////////
 
-		public void Update( TimeLimitMod mymod ) {
-			IDictionary<ActionTimer, bool> will_run = new Dictionary<ActionTimer, bool>();
+		public void Update() {
+			IDictionary<ActionTimer, bool> willRun = new Dictionary<ActionTimer, bool>();
 
 			foreach( ActionTimer timer in this.Timers.ToArray() ) {
 				// This way, each timer's action runs only when the timer is running:
@@ -88,7 +93,7 @@ namespace TimeLimit.Logic {
 				timer.Update();
 				
 				if( runs ) {
-					will_run[ timer ] = timer.IsExpired();
+					willRun[ timer ] = timer.IsExpired();
 				}
 
 				if( timer.IsExpired() ) {
@@ -96,31 +101,32 @@ namespace TimeLimit.Logic {
 				}
 			}
 
-			foreach( var kv in will_run ) {
-				string action_name = kv.Key.Action;
-				bool is_expired = kv.Value;
+			foreach( var kv in willRun ) {
+				string actionName = kv.Key.Action;
+				bool isExpired = kv.Value;
 
-				this.RunAction( mymod, action_name, !is_expired );
+				this.RunAction( actionName, !isExpired );
 			}
 		}
 
 
 		////////////////
 
-		public void DrawTimers( TimeLimitMod mymod, SpriteBatch sb ) {
+		public void DrawTimers( SpriteBatch sb ) {
 			if( !Main.playerInventory ) { return; }
-			
+
+			var mymod = TimeLimitMod.Instance;
 			int x = mymod.Config.TimerDisplayX >= 0 ? mymod.Config.TimerDisplayX : Main.screenWidth + mymod.Config.TimerDisplayX;
 			int y = mymod.Config.TimerDisplayY >= 0 ? mymod.Config.TimerDisplayY : Main.screenHeight + mymod.Config.TimerDisplayY;
 
 			int i = 0;
 			foreach( var timer in this.Timers ) {
 				string act = "Time until " + ActionTimer.RenderAction( timer.Action );
-				Vector2 act_pos = new Vector2( x, y + ( i * 48 ) );
-				Vector2 timer_pos = act_pos + new Vector2( 0, 6 );
+				Vector2 actPos = new Vector2( x, y + ( i * 48 ) );
+				Vector2 timerPos = actPos + new Vector2( 0, 6 );
 
-				sb.DrawString( Main.fontDeathText, act, act_pos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
-				sb.DrawString( Main.fontDeathText, ActionTimer.RenderDuration(timer.Duration), timer_pos, Color.Gray );
+				sb.DrawString( Main.fontDeathText, act, actPos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
+				sb.DrawString( Main.fontDeathText, ActionTimer.RenderDuration(timer.Duration), timerPos, Color.Gray );
 
 				i++;
 			}

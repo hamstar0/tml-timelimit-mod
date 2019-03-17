@@ -1,18 +1,18 @@
 ﻿using HamstarHelpers.Components.Config;
 using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.TmlHelpers;
 using System;
 using Terraria;
 
 
 namespace TimeLimit {
 	public class TimeLimitConfigData : ConfigurationDataBase {
-		public static Version ConfigVersion { get { return new Version(1, 1, 6); } }
-		public static string ConfigFileName { get { return "TimeLimit Config.json"; } }
+		public static string ConfigFileName => "TimeLimit Config.json";
 
 
 		////////////////
 
-		public string VersionSinceUpdate = TimeLimitConfigData.ConfigVersion.ToString();
+		public string VersionSinceUpdate = "";
 
 		public bool DebugModeInfo = false;
 		public bool DebugModeNetInfo = false; 
@@ -30,34 +30,46 @@ namespace TimeLimit {
 			this.Afflictions = new string[] { "Potion Sickness", "Darkness", "Bleeding", "Weak", "Broken Armor", "Ichor", "Chaos State", "Stinky", "Creative Shock" };
 		}
 
-		public bool UpdateToLatestVersion() {
-			var new_config = new TimeLimitConfigData();
-			var vers_since = this.VersionSinceUpdate != "" ?
+
+		////////////////
+
+		public bool CanUpdateVersion() {
+			if( this.VersionSinceUpdate == "" ) {
+				return true;
+			}
+
+			var versSince = new Version( this.VersionSinceUpdate );
+			bool canUpdate = versSince < TimeLimitMod.Instance.Version;
+			
+			return canUpdate;
+		}
+
+		public void UpdateToLatestVersion() {
+			var mymod = TimeLimitMod.Instance;
+
+			var versSince = this.VersionSinceUpdate != "" ?
 				new Version( this.VersionSinceUpdate ) :
 				new Version();
-
-			if( vers_since >= TimeLimitConfigData.ConfigVersion ) {
-				return false;
-			}
 
 			if( this.VersionSinceUpdate == "" ) {
 				this.SetDefaults();
 			}
 
-			this.VersionSinceUpdate = TimeLimitConfigData.ConfigVersion.ToString();
-
-			return true;
+			this.VersionSinceUpdate = mymod.Version.ToString();
 		}
 
 
-		internal void LoadFromNetwork( TimeLimitMod mymod, string json ) {
-			var myplayer = Main.LocalPlayer.GetModPlayer<TimeLimitPlayer>();
+		////////////////
+
+		internal void LoadFromNetwork( string json ) {
+			var mymod = TimeLimitMod.Instance;
+			var myplayer = (TimeLimitPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, mymod, "TimeLimitPlayer" );
 			bool success;
 
 			mymod.ConfigJson.DeserializeMe( json, out success );
 
 			if( !success ) {
-				LogHelpers.Log( "TimeLimitConfigData.LoadFromNetwork - Failed to load timer data from network." );
+				LogHelpers.Warn( "Failed to load timer data from network." );
 			}
 
 			myplayer.FinishModSettingsSync();

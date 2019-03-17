@@ -11,15 +11,15 @@ namespace TimeLimit {
 
 		////////////////
 
-		public override bool CloneNewInstances { get { return false; } }
+		public override bool CloneNewInstances => false;
 
 		public override void Initialize() {
 			this.HasSyncedModSettings = false;
 			this.HasSyncedModData = false;
 		}
 
-		public override void clientClone( ModPlayer client_clone ) {
-			var clone = (TimeLimitPlayer)client_clone;
+		public override void clientClone( ModPlayer clientClone ) {
+			var clone = (TimeLimitPlayer)clientClone;
 			clone.HasSyncedModSettings = this.HasSyncedModSettings;
 			clone.HasSyncedModData = this.HasSyncedModData;
 		}
@@ -27,11 +27,11 @@ namespace TimeLimit {
 
 		////////////////
 
-		public override void SyncPlayer( int to_who, int from_who, bool new_player ) {
+		public override void SyncPlayer( int toWho, int fromWho, bool newPlayer ) {
 			var mymod = (TimeLimitMod)this.mod;
 
 			if( Main.netMode == 2 ) {
-				if( to_who == -1 && from_who == this.player.whoAmI ) {
+				if( toWho == -1 && fromWho == this.player.whoAmI ) {
 					this.OnConnectServer();
 				}
 			}
@@ -65,7 +65,7 @@ namespace TimeLimit {
 			if( this.player.whoAmI == Main.myPlayer ) {
 				if( Main.netMode == 1 ) {	// Client
 					var myworld = this.mod.GetModWorld<TimeLimitWorld>();
-					myworld.Logic.Update( (TimeLimitMod)this.mod );
+					myworld.Logic.Update();
 				}
 			}
 		}

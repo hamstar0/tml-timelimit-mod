@@ -1,4 +1,5 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Components.Errors;
+using HamstarHelpers.Helpers.DebugHelpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -15,9 +16,9 @@ namespace TimeLimit.Commands {
 				return CommandType.Console;
 			}
 		}
-		public override string Command { get { return "timer-stop"; } }
-		public override string Usage { get { return "/"+this.Command+" <action name>"; } }
-		public override string Description { get { return "Stops running timers of a given action type."; } }
+		public override string Command => "timer-stop";
+		public override string Usage => "/"+this.Command+" <action name>";
+		public override string Description => "Stops running timers of a given action type.";
 
 
 		////////////////
@@ -27,7 +28,7 @@ namespace TimeLimit.Commands {
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			if( args.Length < 1 ) {
-				throw new UsageException( "Insufficient arguments." );
+				throw new HamstarException( "Insufficient arguments." );
 			}
 
 			string action = args[0];
@@ -39,13 +40,13 @@ namespace TimeLimit.Commands {
 			myworld.Logic.StopTimers( action );
 
 			if( Main.netMode == 2 ) {
-				SendPackets.SendStopTimersCommand( (TimeLimitMod)this.mod, action, - 1 );
+				SendPackets.SendStopTimersCommand( action, - 1 );
 			}
 
 			caller.Reply( "Timer '"+action+"' stopped." );
 			
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "TimeLimit.TimerStopCommand.Action - Success." );
+				LogHelpers.Alert( "Success." );
 			}
 		}
 	}

@@ -1,22 +1,23 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Components.Errors;
+using HamstarHelpers.Helpers.DebugHelpers;
 using System;
 
 
 namespace TimeLimit {
 	public static partial class TimeLimitAPI {
-		internal static object Call( string call_type, params object[] args ) {
+		internal static object Call( string callType, params object[] args ) {
 			if( TimeLimitMod.Instance.Config.DebugModeInfo ) {
-				LogHelpers.Log( "TimeLimit.TimeLimitAPI.Call - "+call_type+": "+string.Join(",", args) );
+				LogHelpers.Log( "TimeLimit.TimeLimitAPI.Call - "+callType+": "+string.Join(",", args) );
 			}
 
-			string seconds_str;
+			string secondsStr;
 			string repeats_str;
 			int seconds;
 			bool repeats;
-			string action_name;
+			string actionName;
 
 
-			switch( call_type ) {
+			switch( callType ) {
 			case "GetModSettings":
 				return TimeLimitAPI.GetModSettings();
 
@@ -27,62 +28,62 @@ namespace TimeLimit {
 			////
 
 			case "RunTimesUpAction":
-				if( args.Length < 1 ) { throw new Exception( "Insufficient parameters for API call " + call_type ); }
+				if( args.Length < 1 ) { throw new HamstarException( "Insufficient parameters for API call " + callType ); }
 
-				action_name = args[0] as string;
-				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				actionName = args[0] as string;
+				if( string.IsNullOrEmpty( actionName ) ) { throw new HamstarException( "Invalid parameter actionName for API call " + callType ); }
 
-				TimeLimitAPI.RunTimesUpAction( action_name );
+				TimeLimitAPI.RunTimesUpAction( actionName );
 				return null;
 
 			////
 
 			case "TimerStart":
-				if( args.Length < 3 ) { throw new Exception( "Insufficient parameters for API call " + call_type ); }
+				if( args.Length < 3 ) { throw new HamstarException( "Insufficient parameters for API call " + callType ); }
 
-				action_name = args[0] as string;
-				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
-				seconds_str = args[0] as string;
-				if( string.IsNullOrEmpty( seconds_str ) ) { throw new Exception( "Invalid parameter seconds for API call " + call_type ); }
+				actionName = args[0] as string;
+				if( string.IsNullOrEmpty( actionName ) ) { throw new HamstarException( "Invalid parameter actionName for API call " + callType ); }
+				secondsStr = args[0] as string;
+				if( string.IsNullOrEmpty( secondsStr ) ) { throw new HamstarException( "Invalid parameter seconds for API call " + callType ); }
 				repeats_str = args[0] as string;
-				if( string.IsNullOrEmpty( repeats_str ) ) { throw new Exception( "Invalid parameter repeats for API call " + call_type ); }
+				if( string.IsNullOrEmpty( repeats_str ) ) { throw new HamstarException( "Invalid parameter repeats for API call " + callType ); }
 
-				if( !int.TryParse( seconds_str, out seconds ) ) {
-					throw new Exception( args[0] + " is not an integer" );
+				if( !int.TryParse( secondsStr, out seconds ) ) {
+					throw new HamstarException( args[0] + " is not an integer" );
 				}
 
 				if( !bool.TryParse( repeats_str, out repeats ) ) {
-					throw new Exception( args[2] + " is not boolean" );
+					throw new HamstarException( args[2] + " is not boolean" );
 				}
 
-				TimeLimitAPI.TimerStart( action_name, seconds, repeats );
+				TimeLimitAPI.TimerStart( actionName, seconds, repeats );
 				return null;
 
 			case "TimerStop":
-				if( args.Length < 1 ) { throw new Exception( "Insufficient parameters for API call " + call_type ); }
+				if( args.Length < 1 ) { throw new HamstarException( "Insufficient parameters for API call " + callType ); }
 
-				action_name = args[0] as string;
-				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				actionName = args[0] as string;
+				if( string.IsNullOrEmpty( actionName ) ) { throw new HamstarException( "Invalid parameter actionName for API call " + callType ); }
 
-				TimeLimitAPI.TimerStop( action_name );
+				TimeLimitAPI.TimerStop( actionName );
 				return null;
 
 			case "TimerPause":
-				if( args.Length < 1 ) { throw new Exception( "Insufficient parameters for API call " + call_type ); }
+				if( args.Length < 1 ) { throw new HamstarException( "Insufficient parameters for API call " + callType ); }
 
-				action_name = args[0] as string;
-				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				actionName = args[0] as string;
+				if( string.IsNullOrEmpty( actionName ) ) { throw new HamstarException( "Invalid parameter actionName for API call " + callType ); }
 
-				TimeLimitAPI.TimerPause( action_name );
+				TimeLimitAPI.TimerPause( actionName );
 				return null;
 
 			case "TimerResume":
-				if( args.Length < 1 ) { throw new Exception( "Insufficient parameters for API call " + call_type ); }
+				if( args.Length < 1 ) { throw new HamstarException( "Insufficient parameters for API call " + callType ); }
 
-				action_name = args[0] as string;
-				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				actionName = args[0] as string;
+				if( string.IsNullOrEmpty( actionName ) ) { throw new HamstarException( "Invalid parameter actionName for API call " + callType ); }
 
-				TimeLimitAPI.TimerResume( action_name );
+				TimeLimitAPI.TimerResume( actionName );
 				return null;
 
 			////
@@ -102,27 +103,27 @@ namespace TimeLimit {
 			////
 
 			case "GetTimersOf":
-				action_name = args[0] as string;
-				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				actionName = args[0] as string;
+				if( string.IsNullOrEmpty( actionName ) ) { throw new HamstarException( "Invalid parameter actionName for API call " + callType ); }
 
-				return TimeLimitAPI.GetTimersOf( action_name );
+				return TimeLimitAPI.GetTimersOf( actionName );
 
 			////
 
 			case "AddCustomAction":
-				if( args.Length < 3 ) { throw new Exception("Insufficient parameters for API call "+call_type);  }
+				if( args.Length < 3 ) { throw new HamstarException( "Insufficient parameters for API call "+callType);  }
 				
-				action_name = args[0] as string;
-				if( string.IsNullOrEmpty( action_name ) ) { throw new Exception( "Invalid parameter action_name for API call " + call_type ); }
+				actionName = args[0] as string;
+				if( string.IsNullOrEmpty( actionName ) ) { throw new HamstarException( "Invalid parameter actionName for API call " + callType ); }
 
 				var hook = args[1] as CustomTimerAction;
-				if( hook == null ) { throw new Exception( "Invalid parameter hook for API call " + call_type ); }
+				if( hook == null ) { throw new HamstarException( "Invalid parameter hook for API call " + callType ); }
 
-				TimeLimitAPI.AddCustomAction( action_name, hook );
+				TimeLimitAPI.AddCustomAction( actionName, hook );
 				return null;
 			}
 
-			throw new Exception( "No such api call " + call_type );
+			throw new HamstarException( "No such api call " + callType );
 		}
 	}
 }

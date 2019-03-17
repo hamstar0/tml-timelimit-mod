@@ -6,35 +6,37 @@ using TimeLimit.Logic;
 
 namespace TimeLimit.NetProtocol {
 	static class SendPackets {
-		public static bool HandlePacket( TimeLimitMod mymod, TimeLimitProtocolTypes protocol, BinaryReader reader ) {
+		public static bool HandlePacket( TimeLimitProtocolTypes protocol, BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
+
 			if( mymod.Config.DebugModeNetInfo ) {
 				LogHelpers.Log( ">> TimeLimit.SendPackets.HandlePacket - " + protocol.ToString() );
 			}
 
 			switch( protocol ) {
 			case TimeLimitProtocolTypes.ModSettings:
-				SendPackets.ReceiveModSettings( mymod, reader );
+				SendPackets.ReceiveModSettings( reader );
 				return true;
 			case TimeLimitProtocolTypes.TimerStart:
-				SendPackets.ReceiveTimer( mymod, reader );
+				SendPackets.ReceiveTimer( reader );
 				return true;
 			case TimeLimitProtocolTypes.TimersStop:
-				SendPackets.ReceiveStopTimersCommand( mymod, reader );
+				SendPackets.ReceiveStopTimersCommand( reader );
 				return true;
 			case TimeLimitProtocolTypes.TimersPause:
-				SendPackets.ReceivePauseTimersCommand( mymod, reader );
+				SendPackets.ReceivePauseTimersCommand( reader );
 				return true;
 			case TimeLimitProtocolTypes.TimersResume:
-				SendPackets.ReceiveResumeTimersCommand( mymod, reader );
+				SendPackets.ReceiveResumeTimersCommand( reader );
 				return true;
 			case TimeLimitProtocolTypes.TimersAllStop:
-				SendPackets.ReceiveStopAllTimersCommand( mymod, reader );
+				SendPackets.ReceiveStopAllTimersCommand( reader );
 				return true;
 			case TimeLimitProtocolTypes.TimersAllPause:
-				SendPackets.ReceivePauseAllTimersCommand( mymod, reader );
+				SendPackets.ReceivePauseAllTimersCommand( reader );
 				return true;
 			case TimeLimitProtocolTypes.TimersAllResume:
-				SendPackets.ReceiveResumeAllTimersCommand( mymod, reader );
+				SendPackets.ReceiveResumeAllTimersCommand( reader );
 				return true;
 			}
 			return false;
@@ -43,16 +45,18 @@ namespace TimeLimit.NetProtocol {
 
 		////////////////
 
-		public static void SendModSettings( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
+		public static void SendModSettings( int toWho=-1, int ignoreWho=-1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.ModSettings );
 			packet.Write( (string)mymod.ConfigJson.SerializeMe() );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
-		public static void SendStartTimerCommand( TimeLimitMod mymod, ActionTimer timer, int total_timers, int to_who = -1, int ignore_who = -1 ) {
+		public static void SendStartTimerCommand( ActionTimer timer, int totalTimers, int toWho = -1, int ignoreWho = -1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimerStart );
@@ -61,84 +65,93 @@ namespace TimeLimit.NetProtocol {
 			packet.Write( (string)timer.Action );
 			packet.Write( (bool)timer.Repeats );
 			packet.Write( (bool)timer.IsRunning );
-			packet.Write( (int)total_timers );
+			packet.Write( (int)totalTimers );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
-		public static void SendStopTimersCommand( TimeLimitMod mymod, string action, int to_who = -1, int ignore_who = -1 ) {
+		public static void SendStopTimersCommand( string action, int toWho = -1, int ignoreWho = -1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersStop );
 			packet.Write( (string)action );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
-		public static void SendPauseTimersCommand( TimeLimitMod mymod, string action, int to_who = -1, int ignore_who = -1 ) {
+		public static void SendPauseTimersCommand( string action, int toWho = -1, int ignoreWho = -1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersPause );
 			packet.Write( (string)action );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
-		public static void SendResumeTimersCommand( TimeLimitMod mymod, string action, int to_who = -1, int ignore_who = -1 ) {
+		public static void SendResumeTimersCommand( string action, int toWho = -1, int ignoreWho = -1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersResume );
 			packet.Write( (string)action );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
-		public static void SendStopAllTimersCommand( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
+		public static void SendStopAllTimersCommand( int toWho=-1, int ignoreWho=-1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersAllStop );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
-		public static void SendPauseAllTimersCommand( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
+		public static void SendPauseAllTimersCommand( int toWho=-1, int ignoreWho=-1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersAllPause );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
-		public static void SendResumeAllTimersCommand( TimeLimitMod mymod, int to_who=-1, int ignore_who=-1 ) {
+		public static void SendResumeAllTimersCommand( int toWho=-1, int ignoreWho=-1 ) {
+			var mymod = TimeLimitMod.Instance;
 			ModPacket packet = mymod.GetPacket();
 
 			packet.Write( (byte)TimeLimitProtocolTypes.TimersAllResume );
 
-			packet.Send( to_who, ignore_who );
+			packet.Send( toWho, ignoreWho );
 		}
 
 
 		////////////////
 
-		private static void ReceiveModSettings( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveModSettings( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			string json = reader.ReadString();
 
-			mymod.Config.LoadFromNetwork( mymod, json );
+			mymod.Config.LoadFromNetwork( json );
 		}
 
-		private static void ReceiveTimer( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveTimer( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
-			int start_duration = reader.ReadInt32();
+			int startDuration = reader.ReadInt32();
 			int duration = reader.ReadInt32();
 			string action = reader.ReadString();
 			bool repeats = reader.ReadBoolean();
 			bool running = reader.ReadBoolean();
-			int total_timers = reader.ReadInt32();
+			int totalTimers = reader.ReadInt32();
 			
-			myworld.Logic.StartTimerFromNetwork( mymod, start_duration, duration, action, repeats, running, total_timers );
+			myworld.Logic.StartTimerFromNetwork( mymod, startDuration, duration, action, repeats, running, totalTimers );
 		}
 
-		private static void ReceiveStopTimersCommand( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveStopTimersCommand( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			string action = reader.ReadString();
@@ -146,7 +159,8 @@ namespace TimeLimit.NetProtocol {
 			myworld.Logic.StopTimersFromNetwork( action );
 		}
 
-		private static void ReceivePauseTimersCommand( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceivePauseTimersCommand( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			string action = reader.ReadString();
@@ -154,7 +168,8 @@ namespace TimeLimit.NetProtocol {
 			myworld.Logic.PauseTimersFromNetwork( action );
 		}
 
-		private static void ReceiveResumeTimersCommand( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveResumeTimersCommand( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			string action = reader.ReadString();
@@ -162,19 +177,22 @@ namespace TimeLimit.NetProtocol {
 			myworld.Logic.ResumeTimersFromNetwork( action );
 		}
 
-		private static void ReceiveStopAllTimersCommand( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveStopAllTimersCommand( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			myworld.Logic.StopAllTimersFromNetwork();
 		}
 
-		private static void ReceivePauseAllTimersCommand( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceivePauseAllTimersCommand( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			myworld.Logic.PauseAllTimersFromNetwork();
 		}
 
-		private static void ReceiveResumeAllTimersCommand( TimeLimitMod mymod, BinaryReader reader ) {
+		private static void ReceiveResumeAllTimersCommand( BinaryReader reader ) {
+			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			myworld.Logic.ResumeAllTimersFromNetwork();
