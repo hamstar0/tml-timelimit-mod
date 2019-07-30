@@ -1,5 +1,5 @@
-using HamstarHelpers.Components.Config;
 using HamstarHelpers.Components.Errors;
+using HamstarHelpers.Helpers.TModLoader.Mods;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,8 +18,7 @@ namespace TimeLimit {
 
 		////////////////
 
-		internal JsonConfig<TimeLimitConfigData> ConfigJson;
-		public TimeLimitConfigData Config { get { return ConfigJson.Data; } }
+		public TimeLimitConfig Config => this.GetConfig<TimeLimitConfig>();
 
 		public ModLogic Logic = new ModLogic();
 
@@ -27,32 +26,11 @@ namespace TimeLimit {
 		////////////////
 
 		public TimeLimitMod() {
-			this.Properties = new ModProperties() {
-				Autoload = true,
-				AutoloadGores = true,
-				AutoloadSounds = true
-			};
-
-			this.ConfigJson = new JsonConfig<TimeLimitConfigData>( TimeLimitConfigData.ConfigFileName,
-				ConfigurationDataBase.RelativePath, new TimeLimitConfigData() );
+			TimeLimitMod.Instance = this;
 		}
 
 
 		public override void Load() {
-			TimeLimitMod.Instance = this;
-			
-			this.LoadConfigs();
-		}
-
-		private void LoadConfigs() {
-			if( !this.ConfigJson.LoadFile() ) {
-				this.ConfigJson.SaveFile();
-			}
-
-			if( this.Config.UpdateToLatestVersion() ) {
-				ErrorLogger.Log( "Time Limit updated to " + TimeLimitConfigData.ConfigVersion.ToString() );
-				this.ConfigJson.SaveFile();
-			}
 		}
 
 		public override void Unload() {
@@ -63,15 +41,7 @@ namespace TimeLimit {
 		////////////////
 
 		public override object Call( params object[] args ) {
-			if( args.Length == 0 ) { throw new HamstarException( "Undefined call type." ); }
-
-			string callType = args[0] as string;
-			if( args == null ) { throw new HamstarException( "Invalid call type." ); }
-
-			var newArgs = new object[args.Length - 1];
-			Array.Copy( args, 1, newArgs, 0, args.Length - 1 );
-
-			return TimeLimitAPI.Call( callType, newArgs );
+			return ModBoilerplateHelpers.HandleModCall( typeof( TimeLimitAPI ), args );
 		}
 
 
@@ -86,7 +56,7 @@ namespace TimeLimit {
 			if( SendPackets.HandlePacket( protocol, reader ) ) {
 				return;
 			}
-			throw new HamstarException( "Unrecognized packet" );
+			throw new ModHelpersException( "Unrecognized packet" );
 		}
 
 

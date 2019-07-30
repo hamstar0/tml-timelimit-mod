@@ -1,7 +1,7 @@
-﻿using HamstarHelpers.Helpers.BuffHelpers;
-using HamstarHelpers.Helpers.DebugHelpers;
-using HamstarHelpers.Helpers.PlayerHelpers;
-using HamstarHelpers.Helpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.Buffs;
+using HamstarHelpers.Helpers.Debug;
+using HamstarHelpers.Helpers.Players;
+using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -85,7 +85,7 @@ namespace TimeLimit.Logic {
 				var myworld = mymod.GetModWorld<TimeLimitWorld>();
 				
 				if( !mymod.Logic.CustomActions.ContainsKey(action) ) {
-					ErrorLogger.Log( "No such time's up event by name " + action );
+					LogHelpers.Log( "No such time's up event by name " + action );
 					break;
 				}
 				mymod.Logic.CustomActions[ action ]();
@@ -100,8 +100,8 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffIdentityHelpers.NamesToIds.ContainsKey(affliction) ) {
-					ErrorLogger.Log( "No such afflication ((de)buff) by name " + affliction );
+				if( !BuffIdentityHelpers.DisplayNamesToIds.ContainsKey(affliction) ) {
+					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
 
@@ -109,7 +109,7 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 					
-					int buffId = BuffIdentityHelpers.NamesToIds[affliction];
+					int buffId = BuffIdentityHelpers.DisplayNamesToIds[affliction];
 					BuffHelpers.AddPermaBuff( player, buffId );
 				}
 			}
@@ -119,8 +119,8 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffIdentityHelpers.NamesToIds.ContainsKey( affliction ) ) {
-					ErrorLogger.Log( "No such afflication ((de)buff) by name " + affliction );
+				if( !BuffIdentityHelpers.DisplayNamesToIds.ContainsKey( affliction ) ) {
+					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
 
@@ -128,7 +128,7 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 
-					int buffId = BuffIdentityHelpers.NamesToIds[affliction];
+					int buffId = BuffIdentityHelpers.DisplayNamesToIds[affliction];
 					BuffHelpers.RemovePermaBuff( player, buffId );
 				}
 			}

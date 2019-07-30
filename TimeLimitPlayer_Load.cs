@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
 using Terraria.ModLoader;
 using TimeLimit.NetProtocol;
 
@@ -11,7 +11,6 @@ namespace TimeLimit {
 		}
 
 		private void OnConnectCurrentClient() {
-			RequestPackets.RequestModSettings();
 			RequestPackets.RequestTimers();
 		}
 

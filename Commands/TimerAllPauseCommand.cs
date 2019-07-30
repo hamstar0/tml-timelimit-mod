@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
 using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.NetProtocol;
@@ -14,9 +14,9 @@ namespace TimeLimit.Commands {
 				return CommandType.Console;
 			}
 		}
-		public override string Command { get { return "timer-pause-all"; } }
-		public override string Usage { get { return "/"+this.Command; } }
-		public override string Description { get { return "Pauses all running timers."; } }
+		public override string Command => "timer-pause-all";
+		public override string Usage => "/"+this.Command;
+		public override string Description => "Pauses all running timers.";
 
 
 		////////////////
@@ -28,13 +28,13 @@ namespace TimeLimit.Commands {
 			myworld.Logic.PauseAllTimers();
 
 			if( Main.netMode == 2 ) {
-				SendPackets.SendPauseAllTimersCommand( mymod, -1 );
+				SendPackets.SendPauseAllTimersCommand( -1 );
 			}
 
 			caller.Reply( "Timers paused." );
 			
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "TimeLimit.TimerAllPauseCommand.Action - Success." );
+				LogHelpers.Alert( "Success." );
 			}
 		}
 	}

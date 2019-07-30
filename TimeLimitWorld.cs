@@ -16,11 +16,11 @@ namespace TimeLimit {
 		}
 
 		public override void Load( TagCompound tags ) {
-			this.Logic.Load( (TimeLimitMod)this.mod, tags );
+			this.Logic.Load( tags );
 		}
 
 		public override TagCompound Save() {
-			return this.Logic.Save( (TimeLimitMod)this.mod );
+			return this.Logic.Save( );
 		}
 
 
@@ -28,7 +28,7 @@ namespace TimeLimit {
 
 		public override void PreUpdate() {
 			if( Main.netMode != 1 ) {   // Not client
-				this.Logic.Update( (TimeLimitMod)this.mod );
+				this.Logic.Update();
 			}
 		}
 	}

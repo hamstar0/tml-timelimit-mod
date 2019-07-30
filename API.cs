@@ -1,5 +1,5 @@
 ﻿using HamstarHelpers.Components.Errors;
-using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.Debug;
 using System.Collections.Generic;
 using Terraria;
 using TimeLimit.Logic;
@@ -12,29 +12,6 @@ namespace TimeLimit {
 	
 	
 	public static partial class TimeLimitAPI {
-		public static TimeLimitConfigData GetModSettings() {
-			var mymod = TimeLimitMod.Instance;
-
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert();
-			}
-
-			return mymod.Config;
-		}
-
-		public static void SaveModSettingsChanges() {
-			var mymod = TimeLimitMod.Instance;
-
-			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert();
-			}
-
-			mymod.ConfigJson.SaveFile();
-		}
-
-
-		////////////////
-		
 		public static void RunTimesUpAction( string actionName ) {
 			var mymod = TimeLimitMod.Instance;
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();

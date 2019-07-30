@@ -29,7 +29,7 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			if( !mymod.Logic.IsValidAction(action) ) {
-				throw new HamstarException( "Invalid action "+action );
+				throw new ModHelpersException( "Invalid action "+action );
 			}
 
 			var timer = new ActionTimer( duration, duration, action, repeats, isRunning );

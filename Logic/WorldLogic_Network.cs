@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Helpers.TmlHelpers;
+﻿using HamstarHelpers.Helpers.TModLoader;
 using Microsoft.Xna.Framework;
 using Terraria;
 

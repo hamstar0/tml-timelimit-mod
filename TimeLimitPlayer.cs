@@ -1,5 +1,4 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 
@@ -42,13 +41,6 @@ namespace TimeLimit {
 			if( this.player.whoAmI != Main.myPlayer ) { return; }
 
 			var mymod = (TimeLimitMod)this.mod;
-			
-			if( Main.netMode == 0 ) {   // Not server
-				if( !mymod.ConfigJson.LoadFile() ) {
-					mymod.ConfigJson.SaveFile();
-					ErrorLogger.Log( "Time Limit config " + TimeLimitConfigData.ConfigVersion.ToString() + " created (ModPlayer.OnEnterWorld())." );
-				}
-			}
 
 			if( Main.netMode == 0 ) {   // NOT client
 				this.OnConnectSingle();

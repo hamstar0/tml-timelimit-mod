@@ -17,5 +17,3 @@ List of actions:
 - 'afflict' - All players receive a permanent affliction as specified in the config file's 'Afflictions' (de)buff list.
 - 'unafflict' - All players recover from permanent afflictions from the (de)buff list.
 - <custom action name> - Same as 'none', unless another mod implements the named action via. API.
-
-See the Mod Helpers Control Panel for configuration options.

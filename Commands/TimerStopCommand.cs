@@ -1,5 +1,5 @@
 ﻿using HamstarHelpers.Components.Errors;
-using HamstarHelpers.Helpers.DebugHelpers;
+using HamstarHelpers.Helpers.Debug;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -28,7 +28,7 @@ namespace TimeLimit.Commands {
 			var myworld = mymod.GetModWorld<TimeLimitWorld>();
 
 			if( args.Length < 1 ) {
-				throw new HamstarException( "Insufficient arguments." );
+				throw new ModHelpersException( "Insufficient arguments." );
 			}
 
 			string action = args[0];

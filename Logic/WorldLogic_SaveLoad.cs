@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HamstarHelpers.Helpers.Debug;
+using System;
 using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -62,7 +63,7 @@ namespace TimeLimit.Logic {
 				tags.Set( "timer_repeats", repeats );
 				tags.Set( "timer_runs", runs );
 			} catch( Exception e ) {
-				ErrorLogger.Log( e.ToString() );
+				LogHelpers.Log( e.ToString() );
 			}
 
 			return tags;

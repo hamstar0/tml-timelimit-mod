@@ -1,4 +1,4 @@
-﻿using HamstarHelpers.Helpers.DebugHelpers;
+﻿using HamstarHelpers.Helpers.Debug;
 using System.IO;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
@@ -14,9 +14,6 @@ namespace TimeLimit.NetProtocol {
 			}
 
 			switch( protocol ) {
-			case TimeLimitProtocolTypes.ModSettings:
-				SendPackets.ReceiveModSettings( reader );
-				return true;
 			case TimeLimitProtocolTypes.TimerStart:
 				SendPackets.ReceiveTimer( reader );
 				return true;
@@ -44,16 +41,6 @@ namespace TimeLimit.NetProtocol {
 
 
 		////////////////
-
-		public static void SendModSettings( int toWho=-1, int ignoreWho=-1 ) {
-			var mymod = TimeLimitMod.Instance;
-			ModPacket packet = mymod.GetPacket();
-
-			packet.Write( (byte)TimeLimitProtocolTypes.ModSettings );
-			packet.Write( (string)mymod.ConfigJson.SerializeMe() );
-
-			packet.Send( toWho, ignoreWho );
-		}
 
 		public static void SendStartTimerCommand( ActionTimer timer, int totalTimers, int toWho = -1, int ignoreWho = -1 ) {
 			var mymod = TimeLimitMod.Instance;
@@ -129,13 +116,6 @@ namespace TimeLimit.NetProtocol {
 
 
 		////////////////
-
-		private static void ReceiveModSettings( BinaryReader reader ) {
-			var mymod = TimeLimitMod.Instance;
-			string json = reader.ReadString();
-
-			mymod.Config.LoadFromNetwork( json );
-		}
 
 		private static void ReceiveTimer( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
