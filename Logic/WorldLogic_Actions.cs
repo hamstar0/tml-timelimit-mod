@@ -100,7 +100,7 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffIdentityHelpers.DisplayNamesToIds.ContainsKey(affliction) ) {
+				if( !BuffAttributesHelpers.DisplayNamesToIds.ContainsKey(affliction) ) {
 					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
@@ -109,7 +109,7 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 					
-					int buffId = BuffIdentityHelpers.DisplayNamesToIds[affliction];
+					int buffId = BuffAttributesHelpers.DisplayNamesToIds[affliction];
 					BuffHelpers.AddPermaBuff( player, buffId );
 				}
 			}
@@ -119,7 +119,7 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffIdentityHelpers.DisplayNamesToIds.ContainsKey( affliction ) ) {
+				if( !BuffAttributesHelpers.DisplayNamesToIds.ContainsKey( affliction ) ) {
 					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
@@ -128,7 +128,7 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 
-					int buffId = BuffIdentityHelpers.DisplayNamesToIds[affliction];
+					int buffId = BuffAttributesHelpers.DisplayNamesToIds[affliction];
 					BuffHelpers.RemovePermaBuff( player, buffId );
 				}
 			}
