@@ -30,5 +30,17 @@ namespace TimeLimit {
 		public int TimerDisplayX = -384;
 		[DefaultValue( 256 )]
 		public int TimerDisplayY = -256;
+
+
+
+		////////////////
+
+		public override ModConfig Clone() {
+			var clone = (TimeLimitConfig)base.Clone();
+
+			clone.Afflictions = (string[])this.Afflictions.Clone();
+
+			return clone;
+		}
 	}
 }
