@@ -37,7 +37,7 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceiveTimersRequest( BinaryReader reader, int sourceWho ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			foreach( ActionTimer timer in myworld.Logic.Timers ) {
 				if( timer.Duration == 0 && !timer.Repeats ) {

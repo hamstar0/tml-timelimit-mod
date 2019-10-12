@@ -27,7 +27,7 @@ namespace TimeLimit {
 		}
 
 		public void CheckModDataSync( int totalTimerCount ) {
-			var myworld = this.mod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 			int currentTimerCount = myworld.Logic.Timers.Count;
 
 			this.HasSyncedModData = currentTimerCount == totalTimerCount;

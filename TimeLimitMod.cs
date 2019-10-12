@@ -18,7 +18,7 @@ namespace TimeLimit {
 
 		////////////////
 
-		public TimeLimitConfig Config => this.GetConfig<TimeLimitConfig>();
+		public TimeLimitConfig Config => ModContent.GetInstance<TimeLimitConfig>();
 
 		public ModLogic Logic = new ModLogic();
 
@@ -66,7 +66,7 @@ namespace TimeLimit {
 			int idx = layers.FindIndex( layer => layer.Name.Equals( "Vanilla: Mouse Text" ) );
 			if( idx != -1 ) {
 				GameInterfaceDrawMethod drawMethod = delegate {
-					var myworld = this.GetModWorld<TimeLimitWorld>();
+					var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 					myworld.Logic.DrawTimers( Main.spriteBatch );
 

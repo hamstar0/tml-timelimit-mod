@@ -23,7 +23,7 @@ namespace TimeLimit.Commands {
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
 			var mymod = (TimeLimitMod)this.mod;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			myworld.Logic.PauseAllTimers();
 

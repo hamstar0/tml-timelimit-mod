@@ -2,6 +2,7 @@
 using HamstarHelpers.Helpers.Debug;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ModLoader;
 using TimeLimit.Logic;
 using TimeLimit.NetProtocol;
 
@@ -14,7 +15,7 @@ namespace TimeLimit {
 	public static partial class TimeLimitAPI {
 		public static void RunTimesUpAction( string actionName ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( actionName );
@@ -30,7 +31,7 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( actionName + " for "+seconds+", repeating? "+repeats );
@@ -47,7 +48,7 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( actionName );
@@ -64,7 +65,7 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( actionName );
@@ -81,7 +82,7 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert( actionName );
@@ -100,7 +101,7 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert();
@@ -117,7 +118,7 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert();
@@ -134,7 +135,7 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			if( mymod.Config.DebugModeInfo ) {
 				LogHelpers.Alert();
@@ -152,7 +153,7 @@ namespace TimeLimit {
 
 		public static IList<ActionTimer> GetTimersOf( string actionName ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 			IList<ActionTimer> timers = new List<ActionTimer>();
 
 			if( mymod.Config.DebugModeInfo ) {

@@ -119,7 +119,7 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceiveTimer( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 			int startDuration = reader.ReadInt32();
 			int duration = reader.ReadInt32();
 			string action = reader.ReadString();
@@ -132,7 +132,7 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceiveStopTimersCommand( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			string action = reader.ReadString();
 
@@ -141,7 +141,7 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceivePauseTimersCommand( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			string action = reader.ReadString();
 
@@ -150,7 +150,7 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceiveResumeTimersCommand( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			string action = reader.ReadString();
 
@@ -159,21 +159,21 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceiveStopAllTimersCommand( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			myworld.Logic.StopAllTimersFromNetwork();
 		}
 
 		private static void ReceivePauseAllTimersCommand( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			myworld.Logic.PauseAllTimersFromNetwork();
 		}
 
 		private static void ReceiveResumeAllTimersCommand( BinaryReader reader ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = mymod.GetModWorld<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitWorld>();
 
 			myworld.Logic.ResumeAllTimersFromNetwork();
 		}

@@ -82,7 +82,7 @@ namespace TimeLimit.Logic {
 				this.RemoveAffliction();
 				break;
 			default:
-				var myworld = mymod.GetModWorld<TimeLimitWorld>();
+				var myworld = ModContent.GetInstance<TimeLimitWorld>();
 				
 				if( !mymod.Logic.CustomActions.ContainsKey(action) ) {
 					LogHelpers.Log( "No such time's up event by name " + action );
