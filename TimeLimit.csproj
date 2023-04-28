@@ -11,7 +11,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NetSerializer" Version="4.1.2" />
+		<Reference Include="ModLibsCore" HintPath="..\ModLibsCore\bin\ModLibsCore.dll"/>
+		<Reference Include="ModLibsGeneral" HintPath="..\ModLibsGeneral\bin\ModLibsGeneral.dll"/>
+		<Reference Include="ModLibsNet" HintPath="..\ModLibsNet\bin\ModLibsNet.dll"/>
+		<PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -28,9 +31,5 @@
 		<None Remove="build.txt" />
 		<None Remove="description.txt" />
 	</ItemGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DocumentationFile>HamstarHelpers.xml</DocumentationFile>
-	</PropertyGroup>
 
 </Project>
