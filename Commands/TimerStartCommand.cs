@@ -1,11 +1,10 @@
-﻿using HamstarHelpers.Helpers.Debug;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using ModLibsCore.Libraries.Debug;
 using System;
 using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
 using TimeLimit.NetProtocol;
-
 
 namespace TimeLimit.Commands {
 	class TimerStartCommand : ModCommand {
@@ -27,8 +26,8 @@ namespace TimeLimit.Commands {
 		////////////////
 		
 		public override void Action( CommandCaller caller, string input, string[] args ) {
-			var mymod = (TimeLimitMod)this.mod;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var mymod = (TimeLimitMod)this.Mod;
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 			int seconds;
 			bool repeats;
 			string action;
@@ -64,10 +63,10 @@ namespace TimeLimit.Commands {
 				}
 				
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Alert( "Success." );
+					LogLibraries.Warn( "Success." );
 				}
 			} catch( Exception e ) {
-				LogHelpers.Warn( e.ToString() );
+				LogLibraries.Warn( e.ToString() );
 			}
 		}
 	}

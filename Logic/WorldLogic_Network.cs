@@ -1,16 +1,17 @@
-﻿using HamstarHelpers.Helpers.TModLoader;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 
 
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
 		public void StartTimerFromNetwork( TimeLimitMod mymod, int startDuration, int duration, string action, bool repeats, bool running, int totalTimers ) {
-			var myplayer = (TimeLimitPlayer)TmlHelpers.SafelyGetModPlayer( Main.LocalPlayer, mymod, "TimeLimitPlayer" );
+			if( !Main.LocalPlayer.TryGetModPlayer( out TimeLimitPlayer myPlayer ) ) {
+				return;
+			}
 
 			this.StartTimer( startDuration, duration, action, repeats, running );
 
-			myplayer.CheckModDataSync( totalTimers );
+			myPlayer.CheckModDataSync( totalTimers );
 
 			Main.NewText( "Timer started to perform action '" + action + "'" + ( repeats ? " repeatedly." : "." ), Color.Yellow );
 		}

@@ -1,4 +1,3 @@
-using HamstarHelpers.Classes.Errors;
 using System;
 using Terraria.ModLoader;
 

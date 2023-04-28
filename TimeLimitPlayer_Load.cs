@@ -1,7 +1,6 @@
-﻿using HamstarHelpers.Helpers.Debug;
+﻿using ModLibsCore.Libraries.Debug;
 using Terraria.ModLoader;
 using TimeLimit.NetProtocol;
-
 
 namespace TimeLimit {
 	partial class TimeLimitPlayer : ModPlayer {
@@ -27,13 +26,13 @@ namespace TimeLimit {
 		}
 
 		public void CheckModDataSync( int totalTimerCount ) {
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 			int currentTimerCount = myworld.Logic.Timers.Count;
 
 			this.HasSyncedModData = currentTimerCount == totalTimerCount;
 
 			if( currentTimerCount > totalTimerCount ) {
-				LogHelpers.Log( "Timers exceeds server's indicated amount." );
+				LogLibraries.Info( "Timers exceeds server's indicated amount." );
 			}
 		}
 	}

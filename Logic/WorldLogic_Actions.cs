@@ -1,12 +1,11 @@
-﻿using HamstarHelpers.Helpers.Buffs;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.Players;
-using HamstarHelpers.Helpers.TModLoader;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.TModLoader;
+using ModLibsGeneral.Libraries.Buffs;
+using ModLibsGeneral.Libraries.Players;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
-
 
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
@@ -14,7 +13,7 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + isLoop + ")" );
+				LogLibraries.Info( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + isLoop + ")" );
 			}
 
 			switch( action ) {
@@ -28,15 +27,15 @@ namespace TimeLimit.Logic {
 			case "exit":
 				Main.NewText( "Time's up. Bye!", Color.Red );
 				if( Main.netMode != 2 ) {
-					TmlHelpers.ExitToMenu();
+					TmlLibraries.ExitToMenu();
 				}
 				break;
 			case "serverclose":
 				if( Main.netMode == 2 ) {
-					TmlHelpers.ExitToDesktop();
+					TmlLibraries.ExitToDesktop();
 				} else {
 					Main.NewText( "Time's up. Bye, world!", Color.Red );
-					TmlHelpers.ExitToMenu();
+					TmlLibraries.ExitToMenu();
 				}
 				break;
 			case "kill":
@@ -55,7 +54,7 @@ namespace TimeLimit.Logic {
 						Player player = Main.player[i];
 						if( player == null || !player.active || player.dead ) { continue; }
 
-						PlayerHelpers.KillWithPermadeath( player, "Time's up. Game over." );
+						PlayerLibraries.KillWithPermadeath( player, "Time's up. Game over." );
 					}
 				}
 				break;
@@ -63,7 +62,7 @@ namespace TimeLimit.Logic {
 				var afflictions = string.Join( ",", mymod.Config.Afflictions );
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( " TimeLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
+					LogLibraries.Info( " TimeLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
 				}
 
 				if( !isLoop ) {
@@ -82,10 +81,10 @@ namespace TimeLimit.Logic {
 				this.RemoveAffliction();
 				break;
 			default:
-				var myworld = ModContent.GetInstance<TimeLimitWorld>();
+				var myworld = ModContent.GetInstance<TimeLimitSystem>();
 				
 				if( !mymod.Logic.CustomActions.ContainsKey(action) ) {
-					LogHelpers.Log( "No such time's up event by name " + action );
+					LogLibraries.Info( "No such time's up event by name " + action );
 					break;
 				}
 				mymod.Logic.CustomActions[ action ]();
@@ -100,8 +99,8 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffAttributesHelpers.DisplayNamesToIds.ContainsKey(affliction) ) {
-					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
+				if( !BuffAttributesLibraries.DisplayNamesToIds.ContainsKey(affliction) ) {
+					LogLibraries.Info( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
 
@@ -109,8 +108,9 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 					
-					int buffId = BuffAttributesHelpers.DisplayNamesToIds[affliction];
-					BuffHelpers.AddPermaBuff( player, buffId );
+					int buffId = BuffAttributesLibraries.DisplayNamesToIds[affliction];
+
+					BuffPermanenceLibraries.AddPermanentBuff( player, buffId );
 				}
 			}
 		}
@@ -119,8 +119,8 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffAttributesHelpers.DisplayNamesToIds.ContainsKey( affliction ) ) {
-					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
+				if( !BuffAttributesLibraries.DisplayNamesToIds.ContainsKey( affliction ) ) {
+					LogLibraries.Info( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
 
@@ -128,8 +128,9 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 
-					int buffId = BuffAttributesHelpers.DisplayNamesToIds[affliction];
-					BuffHelpers.RemovePermaBuff( player, buffId );
+					int buffId = BuffAttributesLibraries.DisplayNamesToIds[affliction];
+
+					BuffPermanenceLibraries.RemovePermanentBuff( player, buffId );
 				}
 			}
 		}

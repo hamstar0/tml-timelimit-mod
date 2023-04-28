@@ -1,9 +1,7 @@
-﻿using HamstarHelpers.Helpers.Debug;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Terraria.ModLoader;
+using ModLibsCore.Libraries.Debug;
 using Terraria.ModLoader.IO;
-
 
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
@@ -40,7 +38,7 @@ namespace TimeLimit.Logic {
 			this.IsLoaded = true;
 		}
 
-		public TagCompound Save() {
+		public void Save( TagCompound tags ) {
 			IList<int> startDurations = new List<int>();
 			IList<int> durations = new List<int>();
 			IList<string> actions = new List<string>();
@@ -55,7 +53,6 @@ namespace TimeLimit.Logic {
 				runs.Add( timer.IsRunning );
 			}
 
-			var tags = new TagCompound();
 			try {
 				tags.Set( "timer_start_durations", startDurations );
 				tags.Set( "timer_durations", durations );
@@ -63,10 +60,8 @@ namespace TimeLimit.Logic {
 				tags.Set( "timer_repeats", repeats );
 				tags.Set( "timer_runs", runs );
 			} catch( Exception e ) {
-				LogHelpers.Log( e.ToString() );
+				LogLibraries.Alert( e.ToString() );
 			}
-
-			return tags;
 		}
 	}
 }

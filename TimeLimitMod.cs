@@ -1,8 +1,7 @@
-using HamstarHelpers.Classes.Errors;
-using HamstarHelpers.Helpers.TModLoader.Mods;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ModLibsCore.Libraries.TModLoader.Mods;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -41,7 +40,7 @@ namespace TimeLimit {
 		////////////////
 
 		public override object Call( params object[] args ) {
-			return ModBoilerplateHelpers.HandleModCall( typeof( TimeLimitAPI ), args );
+			return ModBoilerplateLibraries.HandleModCall( typeof( TimeLimitAPI ), args );
 		}
 
 
@@ -56,28 +55,7 @@ namespace TimeLimit {
 			if( SendPackets.HandlePacket( protocol, reader ) ) {
 				return;
 			}
-			throw new ModHelpersException( "Unrecognized packet" );
-		}
-
-
-		////////////////
-
-		public override void ModifyInterfaceLayers( List<GameInterfaceLayer> layers ) {
-			int idx = layers.FindIndex( layer => layer.Name.Equals( "Vanilla: Mouse Text" ) );
-			if( idx != -1 ) {
-				GameInterfaceDrawMethod drawMethod = delegate {
-					var myworld = ModContent.GetInstance<TimeLimitWorld>();
-
-					myworld.Logic.DrawTimers( Main.spriteBatch );
-
-					return true;
-				};
-
-				var interfaceLayer = new LegacyGameInterfaceLayer( "TimeLimit: Timers", drawMethod,
-					InterfaceScaleType.UI );
-
-				layers.Insert( idx, interfaceLayer );
-			}
+			throw new InvalidOperationException( "Unrecognized packet" );
 		}
 	}
 }
