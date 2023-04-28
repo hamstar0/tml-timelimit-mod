@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using ModLibsCore.Libraries.Debug;
 using ModLibsCore.Libraries.TModLoader;
 using ModLibsGeneral.Libraries.Buffs;
@@ -16,16 +17,24 @@ namespace TimeLimit.Logic {
 				LogLibraries.Info( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + isLoop + ")" );
 			}
 
+			static void NewText( string text, Color color) {
+				if( Main.dedServ ) {
+					Console.WriteLine( text );
+				} else {
+					Main.NewText( text, color );
+				}
+			}
+
 			switch( action ) {
 			case "none":
 				if( !isLoop ) {
-					Main.NewText( "Time's up.", Color.Red );
+					NewText( "Time's up.", Color.Red );
 				} else {
-					Main.NewText( "Timer restarting.", Color.Yellow );
+					NewText( "Timer restarting.", Color.Yellow );
 				}
 				break;
 			case "exit":
-				Main.NewText( "Time's up. Bye!", Color.Red );
+				NewText( "Time's up. Bye!", Color.Red );
 				if( Main.netMode != 2 ) {
 					TmlLibraries.ExitToMenu();
 				}
@@ -34,7 +43,7 @@ namespace TimeLimit.Logic {
 				if( Main.netMode == 2 ) {
 					TmlLibraries.ExitToDesktop();
 				} else {
-					Main.NewText( "Time's up. Bye, world!", Color.Red );
+					NewText( "Time's up. Bye, world!", Color.Red );
 					TmlLibraries.ExitToMenu();
 				}
 				break;
@@ -66,17 +75,17 @@ namespace TimeLimit.Logic {
 				}
 
 				if( !isLoop ) {
-					Main.NewText( "Time's up. You now have the following: " + afflictions, Color.Red );
+					NewText( "Time's up. You now have the following: " + afflictions, Color.Red );
 				} else {
-					Main.NewText( "Timer restarting. You now have the following: " + afflictions, Color.Yellow );
+					NewText( "Timer restarting. You now have the following: " + afflictions, Color.Yellow );
 				}
 				this.ApplyAffliction();
 				break;
 			case "unafflict":
 				if( !isLoop ) {
-					Main.NewText( "Time's up. All afflictions removed.", Color.Red );
+					NewText( "Time's up. All afflictions removed.", Color.Red );
 				} else {
-					Main.NewText( "Timer restarting. All afflictions removed.", Color.Yellow );
+					NewText( "Timer restarting. All afflictions removed.", Color.Yellow );
 				}
 				this.RemoveAffliction();
 				break;
