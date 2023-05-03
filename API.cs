@@ -1,11 +1,9 @@
-﻿using HamstarHelpers.Classes.Errors;
-using HamstarHelpers.Helpers.Debug;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ModLibsCore.Libraries.Debug;
 using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
 using TimeLimit.NetProtocol;
-
 
 namespace TimeLimit {
 	public delegate void CustomTimerAction();
@@ -15,10 +13,10 @@ namespace TimeLimit {
 	public static partial class TimeLimitAPI {
 		public static void RunTimesUpAction( string actionName ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( actionName );
+				LogLibraries.Warn( actionName );
 			}
 
 			myworld.Logic.RunAction( actionName, false );
@@ -31,10 +29,10 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( actionName + " for "+seconds+", repeating? "+repeats );
+				LogLibraries.Warn( actionName + " for "+seconds+", repeating? "+repeats );
 			}
 
 			ActionTimer timer = myworld.Logic.StartTimer( seconds * 60, seconds * 60, actionName, repeats, true );
@@ -48,10 +46,10 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( actionName );
+				LogLibraries.Warn( actionName );
 			}
 
 			myworld.Logic.StopTimers( actionName );
@@ -65,10 +63,10 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( actionName );
+				LogLibraries.Warn( actionName );
 			}
 
 			myworld.Logic.PauseTimers( actionName );
@@ -82,10 +80,10 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( actionName );
+				LogLibraries.Warn( actionName );
 			}
 
 			myworld.Logic.ResumeTimers( actionName );
@@ -101,10 +99,10 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert();
+				LogLibraries.Warn(string.Empty);
 			}
 
 			myworld.Logic.StopAllTimers();
@@ -118,10 +116,10 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert();
+				LogLibraries.Warn( string.Empty );
 			}
 
 			myworld.Logic.PauseAllTimers();
@@ -135,10 +133,10 @@ namespace TimeLimit {
 			if( Main.netMode == 1 ) { return; }
 
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert();
+				LogLibraries.Warn( string.Empty );
 			}
 
 			myworld.Logic.ResumeAllTimers();
@@ -153,11 +151,11 @@ namespace TimeLimit {
 
 		public static IList<ActionTimer> GetTimersOf( string actionName ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 			IList<ActionTimer> timers = new List<ActionTimer>();
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( actionName );
+				LogLibraries.Warn( actionName );
 			}
 
 			foreach( var timer in myworld.Logic.Timers ) {
@@ -176,7 +174,7 @@ namespace TimeLimit {
 			var logic = mymod.Logic;
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( actionName );
+				LogLibraries.Warn( actionName );
 			}
 
 			logic.CustomActions[ actionName ] = hook;

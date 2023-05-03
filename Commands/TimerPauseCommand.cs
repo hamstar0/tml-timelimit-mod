@@ -1,10 +1,8 @@
-﻿using HamstarHelpers.Classes.Errors;
-using HamstarHelpers.Helpers.Debug;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using ModLibsCore.Libraries.Debug;
 using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.NetProtocol;
-
 
 namespace TimeLimit.Commands {
 	class TimerPauseCommand : ModCommand {
@@ -24,11 +22,11 @@ namespace TimeLimit.Commands {
 		////////////////
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
-			var mymod = (TimeLimitMod)this.mod;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var mymod = (TimeLimitMod)this.Mod;
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			if( args.Length < 1 ) {
-				throw new ModHelpersException( "Insufficient arguments." );
+				throw new UsageException( "Insufficient arguments." );
 			}
 
 			string action = args[0];
@@ -46,7 +44,7 @@ namespace TimeLimit.Commands {
 			caller.Reply( "Timer '" + action + "' paused." );
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( "Success." );
+				LogLibraries.Warn( "Success." );
 			}
 		}
 	}

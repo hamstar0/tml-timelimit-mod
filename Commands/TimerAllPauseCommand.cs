@@ -1,8 +1,7 @@
-﻿using HamstarHelpers.Helpers.Debug;
+﻿using ModLibsCore.Libraries.Debug;
 using Terraria;
 using Terraria.ModLoader;
 using TimeLimit.NetProtocol;
-
 
 namespace TimeLimit.Commands {
 	class TimerAllPauseCommand : ModCommand {
@@ -22,8 +21,8 @@ namespace TimeLimit.Commands {
 		////////////////
 
 		public override void Action( CommandCaller caller, string input, string[] args ) {
-			var mymod = (TimeLimitMod)this.mod;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var mymod = (TimeLimitMod)this.Mod;
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			myworld.Logic.PauseAllTimers();
 
@@ -34,7 +33,7 @@ namespace TimeLimit.Commands {
 			caller.Reply( "Timers paused." );
 			
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Alert( "Success." );
+				LogLibraries.Warn( "Success." );
 			}
 		}
 	}

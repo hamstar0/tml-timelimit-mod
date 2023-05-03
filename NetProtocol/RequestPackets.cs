@@ -1,15 +1,14 @@
-﻿using HamstarHelpers.Helpers.Debug;
-using System.IO;
+﻿using System.IO;
+using ModLibsCore.Libraries.Debug;
 using Terraria.ModLoader;
 using TimeLimit.Logic;
-
 
 namespace TimeLimit.NetProtocol {
 	static class RequestPackets {
 		public static bool HandlePacket( TimeLimitProtocolTypes protocol, BinaryReader reader, int sourceWho ) {
 			var mymod = TimeLimitMod.Instance;
 			if( mymod.Config.DebugModeNetInfo ) {
-				LogHelpers.Log( "<< TimeLimit.RequestPackets.HandlePacket - " + protocol.ToString() );
+				LogLibraries.Info( "<< TimeLimit.RequestPackets.HandlePacket - " + protocol.ToString() );
 			}
 
 			switch( protocol ) {
@@ -37,7 +36,7 @@ namespace TimeLimit.NetProtocol {
 
 		private static void ReceiveTimersRequest( BinaryReader reader, int sourceWho ) {
 			var mymod = TimeLimitMod.Instance;
-			var myworld = ModContent.GetInstance<TimeLimitWorld>();
+			var myworld = ModContent.GetInstance<TimeLimitSystem>();
 
 			foreach( ActionTimer timer in myworld.Logic.Timers ) {
 				if( timer.Duration == 0 && !timer.Repeats ) {

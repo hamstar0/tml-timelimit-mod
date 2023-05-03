@@ -1,11 +1,11 @@
-﻿using HamstarHelpers.Classes.Errors;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
-
+using Terraria.GameContent;
+using Terraria.ModLoader;
 
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
@@ -29,7 +29,7 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			if( !mymod.Logic.IsValidAction(action) ) {
-				throw new ModHelpersException( "Invalid action "+action );
+				throw new UsageException( "Invalid action "+action );
 			}
 
 			var timer = new ActionTimer( duration, duration, action, repeats, isRunning );
@@ -125,8 +125,8 @@ namespace TimeLimit.Logic {
 				Vector2 actPos = new Vector2( x, y + ( i * 48 ) );
 				Vector2 timerPos = actPos + new Vector2( 0, 6 );
 
-				sb.DrawString( Main.fontDeathText, act, actPos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
-				sb.DrawString( Main.fontDeathText, ActionTimer.RenderDuration(timer.Duration), timerPos, Color.Gray );
+				sb.DrawString( FontAssets.DeathText.Value, act, actPos, Color.White, 0f, default(Vector2), 0.25f, SpriteEffects.None, 1f );
+				sb.DrawString( FontAssets.DeathText.Value, ActionTimer.RenderDuration(timer.Duration), timerPos, Color.Gray );
 
 				i++;
 			}

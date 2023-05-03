@@ -1,12 +1,12 @@
-﻿using HamstarHelpers.Helpers.Buffs;
-using HamstarHelpers.Helpers.Debug;
-using HamstarHelpers.Helpers.Players;
-using HamstarHelpers.Helpers.TModLoader;
+﻿using System;
 using Microsoft.Xna.Framework;
+using ModLibsCore.Libraries.Debug;
+using ModLibsCore.Libraries.TModLoader;
+using ModLibsGeneral.Libraries.Buffs;
+using ModLibsGeneral.Libraries.Players;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
-
 
 namespace TimeLimit.Logic {
 	partial class WorldLogic {
@@ -14,29 +14,37 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			if( mymod.Config.DebugModeInfo ) {
-				LogHelpers.Log( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + isLoop + ")" );
+				LogLibraries.Info( "TimeLimit.WorldLogic.RunAction - " + action + " (loops? " + isLoop + ")" );
+			}
+
+			static void NewText( string text, Color color) {
+				if( Main.dedServ ) {
+					Console.WriteLine( text );
+				} else {
+					Main.NewText( text, color );
+				}
 			}
 
 			switch( action ) {
 			case "none":
 				if( !isLoop ) {
-					Main.NewText( "Time's up.", Color.Red );
+					NewText( "Time's up.", Color.Red );
 				} else {
-					Main.NewText( "Timer restarting.", Color.Yellow );
+					NewText( "Timer restarting.", Color.Yellow );
 				}
 				break;
 			case "exit":
-				Main.NewText( "Time's up. Bye!", Color.Red );
+				NewText( "Time's up. Bye!", Color.Red );
 				if( Main.netMode != 2 ) {
-					TmlHelpers.ExitToMenu();
+					TmlLibraries.ExitToMenu();
 				}
 				break;
 			case "serverclose":
 				if( Main.netMode == 2 ) {
-					TmlHelpers.ExitToDesktop();
+					TmlLibraries.ExitToDesktop();
 				} else {
-					Main.NewText( "Time's up. Bye, world!", Color.Red );
-					TmlHelpers.ExitToMenu();
+					NewText( "Time's up. Bye, world!", Color.Red );
+					TmlLibraries.ExitToMenu();
 				}
 				break;
 			case "kill":
@@ -55,7 +63,7 @@ namespace TimeLimit.Logic {
 						Player player = Main.player[i];
 						if( player == null || !player.active || player.dead ) { continue; }
 
-						PlayerHelpers.KillWithPermadeath( player, "Time's up. Game over." );
+						PlayerLibraries.KillWithPermadeath( player, "Time's up. Game over." );
 					}
 				}
 				break;
@@ -63,29 +71,29 @@ namespace TimeLimit.Logic {
 				var afflictions = string.Join( ",", mymod.Config.Afflictions );
 
 				if( mymod.Config.DebugModeInfo ) {
-					LogHelpers.Log( " TimeLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
+					LogLibraries.Info( " TimeLimit.WorldLogic.RunAction - " + action + ": " + afflictions );
 				}
 
 				if( !isLoop ) {
-					Main.NewText( "Time's up. You now have the following: " + afflictions, Color.Red );
+					NewText( "Time's up. You now have the following: " + afflictions, Color.Red );
 				} else {
-					Main.NewText( "Timer restarting. You now have the following: " + afflictions, Color.Yellow );
+					NewText( "Timer restarting. You now have the following: " + afflictions, Color.Yellow );
 				}
 				this.ApplyAffliction();
 				break;
 			case "unafflict":
 				if( !isLoop ) {
-					Main.NewText( "Time's up. All afflictions removed.", Color.Red );
+					NewText( "Time's up. All afflictions removed.", Color.Red );
 				} else {
-					Main.NewText( "Timer restarting. All afflictions removed.", Color.Yellow );
+					NewText( "Timer restarting. All afflictions removed.", Color.Yellow );
 				}
 				this.RemoveAffliction();
 				break;
 			default:
-				var myworld = ModContent.GetInstance<TimeLimitWorld>();
+				var myworld = ModContent.GetInstance<TimeLimitSystem>();
 				
 				if( !mymod.Logic.CustomActions.ContainsKey(action) ) {
-					LogHelpers.Log( "No such time's up event by name " + action );
+					LogLibraries.Info( "No such time's up event by name " + action );
 					break;
 				}
 				mymod.Logic.CustomActions[ action ]();
@@ -100,8 +108,8 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffAttributesHelpers.DisplayNamesToIds.ContainsKey(affliction) ) {
-					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
+				if( !BuffAttributesLibraries.DisplayNamesToIds.ContainsKey(affliction) ) {
+					LogLibraries.Info( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
 
@@ -109,8 +117,9 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 					
-					int buffId = BuffAttributesHelpers.DisplayNamesToIds[affliction];
-					BuffHelpers.AddPermaBuff( player, buffId );
+					int buffId = BuffAttributesLibraries.DisplayNamesToIds[affliction];
+
+					BuffPermanenceLibraries.AddPermanentBuff( player, buffId );
 				}
 			}
 		}
@@ -119,8 +128,8 @@ namespace TimeLimit.Logic {
 			var mymod = TimeLimitMod.Instance;
 
 			foreach( string affliction in mymod.Config.Afflictions ) {
-				if( !BuffAttributesHelpers.DisplayNamesToIds.ContainsKey( affliction ) ) {
-					LogHelpers.Log( "No such afflication ((de)buff) by name " + affliction );
+				if( !BuffAttributesLibraries.DisplayNamesToIds.ContainsKey( affliction ) ) {
+					LogLibraries.Info( "No such afflication ((de)buff) by name " + affliction );
 					continue;
 				}
 
@@ -128,8 +137,9 @@ namespace TimeLimit.Logic {
 					Player player = Main.player[i];
 					if( player == null || !player.active ) { continue; }
 
-					int buffId = BuffAttributesHelpers.DisplayNamesToIds[affliction];
-					BuffHelpers.RemovePermaBuff( player, buffId );
+					int buffId = BuffAttributesLibraries.DisplayNamesToIds[affliction];
+
+					BuffPermanenceLibraries.RemovePermanentBuff( player, buffId );
 				}
 			}
 		}
