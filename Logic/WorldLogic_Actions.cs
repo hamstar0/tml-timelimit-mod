@@ -6,6 +6,7 @@ using ModLibsGeneral.Libraries.Buffs;
 using ModLibsGeneral.Libraries.Players;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace TimeLimit.Logic {
@@ -79,7 +80,10 @@ namespace TimeLimit.Logic {
 				} else {
 					NewText( "Timer restarting. You now have the following: " + afflictions, Color.Yellow );
 				}
-				this.ApplyAffliction();
+
+				if( Main.netMode != NetmodeID.MultiplayerClient ) {
+					this.ApplyAffliction();
+				}
 				break;
 			case "unafflict":
 				if( !isLoop ) {
@@ -87,7 +91,9 @@ namespace TimeLimit.Logic {
 				} else {
 					NewText( "Timer restarting. All afflictions removed.", Color.Yellow );
 				}
-				this.RemoveAffliction();
+				if( Main.netMode != NetmodeID.MultiplayerClient ) {
+					this.RemoveAffliction();
+				}
 				break;
 			default:
 				var myworld = ModContent.GetInstance<TimeLimitSystem>();
