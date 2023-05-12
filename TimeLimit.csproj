@@ -8,6 +8,7 @@
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<LangVersion>latest</LangVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<OutDir>bin/</OutDir>
 	</PropertyGroup>
 
 	<ItemGroup>
